@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" href="https://cdn.luogu.com.cn/upload/image_hosting/5bhl3tn0.png" type="image/png" sizes="32x32">
+    <meta charset="utf-8">
+    <title>Q 的网站</title>
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* ========== 本地字体引入（与本文件同目录） ========== */
+        /* 字体只应用于 class="qttf" 的 div，用法：<div class="qttf">文字</div> */
+        @font-face {
+            font-family: "iasans";
+            src: url("ia-11152edit.ttf") format("truetype");
+            font-display: swap;
+        }
+
+        /* ========== 主题变量：清新简约 ========== */
+        :root {
+            --bg: #f5f9f7;            /* 页面底色：极浅的薄荷白 */
+            --card: #ffffff;          /* 卡片底色 */
+            --border: #e4efea;        /* 浅灰绿描边 */
+            --text: #3b4a45;          /* 正文 */
+            --text-strong: #24352f;   /* 标题 */
+            --text-sub: #8fa39c;      /* 次要信息 */
+            --accent: #46b39a;        /* 主题色：清新薄荷绿 */
+            --accent-deep: #2e8a76;   /* 深一档的主题色 */
+            --accent-soft: #eaf6f2;   /* 主题色浅底 */
+            --code-bg: #f4f8f6;       /* 代码块浅底 */
+        }
+
+        /* ========== 全局重置与基础配置 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 正文默认使用系统字体，保证阅读舒适 */
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text);
+        }
+
+        /* 自定义 TTF 字体：只通过 <div class="qttf"> 使用，不全局套用 */
+        .qttf {
+            font-family: "iasans", "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        ::selection {
+            background: rgba(70, 179, 154, 0.18);
+        }
+
+        /* ========== 站点头部 ========== */
+        header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: var(--text-strong);
+            margin: 26px 0 22px;
+        }
+
+        /* 头部前的小圆点，一点清新的点缀 */
+        header::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* ========== 主体卡片 ========== */
+        main {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60, 110, 95, 0.06);
+            padding: 40px 44px;
+            width: 100%;
+            max-width: 780px;
+            margin-bottom: 24px;
+        }
+
+        /* ========== 返回按钮（胶囊形，弱化存在感） ========== */
+        .back-btn {
+            display: inline-block;
+            color: var(--accent-deep);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 22px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            transition: all 0.25s ease;
+        }
+
+        .back-btn:hover {
+            color: #ffffff;
+            background: var(--accent);
+        }
+
+        /* ========== 文章标题 ========== */
+        .article-title {
+            font-size: 26px;
+            color: var(--text-strong);
+            margin-bottom: 12px;
+            font-weight: 700;
+            line-height: 1.5;
+            letter-spacing: 0.5px;
+        }
+
+        /* ========== 文章信息（日期、分类、作者） ========== */
+        .article-meta {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 1px dashed var(--border);
+            letter-spacing: 0.5px;
+        }
+
+        /* ========== 文章正文 ========== */
+        .article-content {
+            font-size: 16px;
+            line-height: 1.9;
+            color: var(--text);
+        }
+
+        .article-content p {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        /* 一级小标题：细竖线点缀 */
+        .article-content h2 {
+            font-size: 19px;
+            font-weight: 600;
+            color: var(--text-strong);
+            margin: 34px 0 14px;
+            padding-left: 12px;
+            border-left: 3px solid var(--accent);
+            line-height: 1.4;
+        }
+
+        /* 二级小标题 */
+        .article-content h3 {
+            font-size: 16.5px;
+            font-weight: 600;
+            color: var(--text-strong);
+            margin: 24px 0 10px;
+        }
+
+        /* 正文内链接 */
+        .article-content a {
+            color: var(--accent-deep);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(70, 179, 154, 0.4);
+            transition: all 0.25s ease;
+        }
+
+        .article-content a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* 图片 */
+        .article-content img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: 24px auto;
+            display: block;
+            box-shadow: 0 4px 16px rgba(60, 110, 95, 0.08);
+        }
+
+        /* 代码块：浅色更贴合整体气质 */
+        .article-content pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            color: #374740;
+            padding: 18px 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* 行内代码 */
+        .article-content code {
+            background: var(--accent-soft);
+            color: var(--accent-deep);
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 14px;
+        }
+
+        /* 代码块内的 code 不被行内样式污染 */
+        .article-content pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+            border-radius: 0;
+            font-size: inherit;
+        }
+
+        /* 引用块 */
+        .article-content blockquote {
+            background: var(--accent-soft);
+            border-left: 3px solid var(--accent);
+            padding: 14px 18px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+            color: #4c6560;
+            font-size: 15.5px;
+        }
+
+        /* 列表 */
+        .article-content ul,
+        .article-content ol {
+            margin: 18px 0;
+            padding-left: 1.5em;
+        }
+
+        .article-content li {
+            margin-bottom: 8px;
+            line-height: 1.8;
+        }
+
+        /* 分割线 */
+        .article-content hr {
+            border: none;
+            border-top: 1px dashed var(--border);
+            margin: 28px 0;
+        }
+
+        /* ========== 底部致谢容器 ========== */
+        .link-container {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60, 110, 95, 0.06);
+            padding: 26px;
+            width: 100%;
+            max-width: 780px;
+            text-align: center;
+            margin-bottom: 26px;
+
+            color: var(--text-sub);
+            font-size: 14px;
+            line-height: 1.8;
+            letter-spacing: 1px;
+        }
+
+        /* ========== 页脚 ========== */
+        footer {
+            color: #a7b5b0;
+            font-size: 12.5px;
+            margin-top: auto;
+            padding: 16px 0;
+            letter-spacing: 1px;
+        }
+
+        /* ========== 移动端适配 ========== */
+        @media (max-width: 600px) {
+            body {
+                padding: 16px 12px;
+            }
+
+            header {
+                font-size: 17px;
+                letter-spacing: 4px;
+            }
+
+            main {
+                padding: 26px 22px;
+                border-radius: 14px;
+            }
+
+            .article-title {
+                font-size: 22px;
+            }
+
+            .article-content {
+                font-size: 15.5px;
+            }
+
+            .article-content h2 {
+                font-size: 17.5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 站点头部（可自行修改站点名） -->
+    <header>Q 的网站</header>
+
+    <main>
+
+        <!-- 文章信息：日期 / 分类 / 作者（修改此处） -->
+        <div class="article-meta">
+            撰写日期：2026-11-16 · 分类：首页 · 作者：cyq111111
+        </div>
+
+        <!-- 文章正文开始（在此处编写正文） -->
+        <div class="article-content">
+            <p>Q</p>
+            <div class="qttf">
+            <p>Q q<p>
+            </div>
+            <h2>注：有密码？你懂的</h2>
+            <h2>一、你可以通过在网址后面加如下内容下载sth（？）</h2>
+            <p>例子：若下面写“example.exe”，则网址为Q.github.io/example.exe</p>
+
+            <h3>1.1 MC系列</h3>
+            <p>HMCL-3.14.1.exe</p>
+            <p>Campfire.exe</p>
+            <p>Plain Craft Launcher 2.exe</p>
+            <h3>1.2 字体（<div class="qttf">testabcdefg</div>） </h3>
+            <p>ia-11152edit.ttf</p>
+            <h3>1.3 qmence系列</h3>
+            <p>清醒梦（只读）.zip</p>
+            <p>皮蛋大集目录.zip</p>
+            <h2>二、代码示例</h2>
+            <p>下面是一段代码示例：</p>
+            <pre>
+// 这里是代码块
+cout << "棍母";
+                #if 0
+            my qq is 3493226164
+            cyq142857@outlook.com
+            wechat is secret!~. ask me in email is ok.
+            #endif</pre>
+
+            <p>行内代码示例：<code>console.log("test")</code>。</p>
+
+            <h2>三、引用示例</h2>
+            <blockquote>
+                说又不听，听又不懂，懂又不做，做又做错，错又不认，认又不改……此者，朽木不可雕也。
+            </blockquote>
+
+            <h2>四、列表示例</h2>
+            <ul>
+                <li>列表项 1</li>
+                <li>列表项 2</li>
+                <li>列表项 3</li>
+            </ul>
+
+            <ol>
+                <li>有序列表项 1</li>
+                <li>有序列表项 2</li>
+                <li>有序列表项 3</li>
+            </ol>
+
+            <p>文章结尾段落，总结全文内容。</p>
+        </div>
+        <!-- 文章正文结束 -->
+    </main>
+
+    <div class="link-container">
+        <!-- 用法示例：外包一层 <div class="qttf"> 即可使用 ia-11152edit.ttf -->
+        <div class="qttf">
+            <p>感谢阅读 · Enjoy Reading</p>
+        </div>
+    </div>
+
+    <footer>© 2026 Q 的网站</footer>
+
+    <script>
+        // 自动传递 islogin=true 到所有子页面链接
+        function appendLoginParamToAllLink() {
+            const urlParams = new URLSearchParams(location.search);
+            const isLogin = urlParams.get("islogin") === "true";
+            if (!isLogin) return;
+
+            // 获取页面全部 a 标签
+            const allA = document.querySelectorAll("a");
+            allA.forEach(a => {
+                const originHref = a.getAttribute("href");
+                // 排除外部网址（luogu、xiaoziyi 等外链不追加参数）
+                if (!originHref || originHref.startsWith("http")) return;
+
+                // 拆分原有链接和已有参数
+                const hasParam = originHref.includes("?");
+                if (hasParam) {
+                    a.href = originHref + "&islogin=true";
+                } else {
+                    a.href = originHref + "?islogin=true";
+                }
+            });
+        }
+        // 页面加载执行
+        appendLoginParamToAllLink();
+    </script>
+</body>
+</html>
