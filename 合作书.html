@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" href="https://cdn.luogu.com.cn/upload/image_hosting/5bhl3tn0.png" type="image/png" sizes="32x32">
+    <meta charset="utf-8">
+    <title>合作书</title>
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* ========== 本地字体引入（与本文件同目录） ========== */
+        /* 字体只应用于 class="qttf" 的 div，用法：<div class="qttf">文字</div> */
+        @font-face {
+            font-family: "iasans";
+            src: url("ia-11152edit.ttf") format("truetype");
+            font-display: swap;
+        }
+
+        /* ========== 主题变量：清新简约（与整站一致） ========== */
+        :root {
+            --bg: #f5f9f7;            /* 页面底色：极浅的薄荷白 */
+            --card: #ffffff;          /* 卡片底色 */
+            --border: #e4efea;        /* 浅灰绿描边 */
+            --text: #3b4a45;          /* 正文 */
+            --text-strong: #24352f;   /* 标题 */
+            --text-sub: #8fa39c;      /* 次要信息 */
+            --accent: #46b39a;        /* 主题色：清新薄荷绿 */
+            --accent-deep: #2e8a76;   /* 深一档的主题色 */
+            --accent-soft: #eaf6f2;   /* 主题色浅底 */
+            --code-bg: #f4f8f6;       /* 代码块浅底 */
+        }
+
+        /* ========== 全局重置与基础配置 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 正文默认使用系统字体，保证阅读舒适 */
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text);
+        }
+
+        /* 自定义 TTF 字体：只通过 <div class="qttf"> 使用，不全局套用 */
+        .qttf {
+            font-family: "iasans", "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        ::selection {
+            background: rgba(70, 179, 154, 0.18);
+        }
+
+        /* ========== 站点头部 ========== */
+        header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: var(--text-strong);
+            margin: 26px 0 22px;
+        }
+
+        /* 头部前的小圆点，一点清新的点缀 */
+        header::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* ========== 主体卡片 ========== */
+        main {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60, 110, 95, 0.06);
+            padding: 44px 44px 48px;
+            width: 100%;
+            max-width: 780px;
+            margin-bottom: 24px;
+        }
+
+        /* ========== 返回主页按钮（胶囊形） ========== */
+        .back-btn {
+            display: inline-block;
+            color: var(--accent-deep);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 22px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            transition: all 0.25s ease;
+        }
+
+        .back-btn:hover {
+            color: #ffffff;
+            background: var(--accent);
+        }
+
+        /* ========== 大标题 / 副标题 ========== */
+        .doc-title {
+            font-size: 30px;
+            color: var(--text-strong);
+            font-weight: 700;
+            line-height: 1.4;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .doc-subtitle {
+            font-size: 15px;
+            color: var(--text-sub);
+            line-height: 1.7;
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        /* 标题下方分隔线 */
+        .divider {
+            width: 48px;
+            height: 1px;
+            background: var(--border);
+            margin: 0 auto 28px;
+        }
+
+        /* ========== 语言切换按钮 ========== */
+        .lang-switcher {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .lang-btn {
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--accent-deep);
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 7px 18px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .lang-btn:hover {
+            background: var(--accent-soft);
+            border-color: var(--accent);
+        }
+
+        .lang-btn.active {
+            color: #ffffff;
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* ========== 正文（语言面板） ========== */
+        .lang-panel {
+            display: none;
+        }
+
+        .lang-panel.active {
+            display: block;
+            animation: fade-in 0.3s ease;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 正文样式，与站内文章一致 */
+        .article-content {
+            font-size: 16px;
+            line-height: 1.9;
+            color: var(--text);
+        }
+
+        .article-content p {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .article-content h2 {
+            font-size: 19px;
+            font-weight: 600;
+            color: var(--text-strong);
+            margin: 30px 0 14px;
+            padding-left: 12px;
+            border-left: 3px solid var(--accent);
+            line-height: 1.4;
+        }
+
+        .article-content h3 {
+            font-size: 16.5px;
+            font-weight: 600;
+            color: var(--text-strong);
+            margin: 24px 0 10px;
+        }
+
+        .article-content a {
+            color: var(--accent-deep);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(70, 179, 154, 0.4);
+            transition: all 0.25s ease;
+        }
+
+        .article-content a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .article-content img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: 24px auto;
+            display: block;
+            box-shadow: 0 4px 16px rgba(60, 110, 95, 0.08);
+        }
+
+        .article-content pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            color: #374740;
+            padding: 18px 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .article-content code {
+            background: var(--accent-soft);
+            color: var(--accent-deep);
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 14px;
+        }
+
+        .article-content pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+            border-radius: 0;
+            font-size: inherit;
+        }
+
+        .article-content blockquote {
+            background: var(--accent-soft);
+            border-left: 3px solid var(--accent);
+            padding: 14px 18px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+            color: #4c6560;
+            font-size: 15.5px;
+        }
+
+        .article-content ul,
+        .article-content ol {
+            margin: 18px 0;
+            padding-left: 1.5em;
+        }
+
+        .article-content li {
+            margin-bottom: 8px;
+            line-height: 1.8;
+        }
+
+        .article-content hr {
+            border: none;
+            border-top: 1px dashed var(--border);
+            margin: 28px 0;
+        }
+
+        /* ========== 页脚 ========== */
+        footer {
+            color: #a7b5b0;
+            font-size: 12.5px;
+            margin-top: auto;
+            padding: 16px 0;
+            letter-spacing: 1px;
+        }
+
+        /* ========== 移动端适配 ========== */
+        @media (max-width: 600px) {
+            body {
+                padding: 16px 12px;
+            }
+
+            header {
+                font-size: 17px;
+                letter-spacing: 4px;
+            }
+
+            main {
+                padding: 32px 22px 36px;
+                border-radius: 14px;
+            }
+
+            .doc-title {
+                font-size: 24px;
+            }
+
+            .article-content {
+                font-size: 15.5px;
+            }
+        }
+
+        /* 尊重系统的“减少动态效果”设置 */
+        @media (prefers-reduced-motion: reduce) {
+            .lang-panel.active { animation: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 站点头部（可自行修改站点名） -->
+    <header>Q 的网站</header>
+
+    <main>
+        <!-- 返回主页 -->
+        <a href="/" class="back-btn">← 返回主页</a>
+
+        <!-- 大标题 / 副标题 -->
+        <h1 class="doc-title">合作书</h1>
+        <p class="doc-subtitle">能翻译合作书的语言才是好语言，合作书太权威了</p>
+
+        <div class="divider"></div>
+
+        <!--
+          语言切换按钮会根据下面每个 .lang-panel 的 data-name 自动生成，无需手动改这里。
+          编辑说明：
+          1. 改语言名称 → 改对应 .lang-panel 的 data-name
+          2. 改正文内容 → 改对应 .lang-panel 里面的 HTML
+          3. 增删语言     → 复制 / 删除整个 <div class="lang-panel">…</div>
+          4. 想让某段文字用自定义字体 → 用 <div class="qttf">文字</div> 包起来
+        -->
+        <div class="lang-switcher" id="langSwitcher"></div>
+
+        <div class="article-content" id="articleContent">
+            <!-- 语言 1：把 data-name 改成你想显示的语言名 -->
+            <div class="lang-panel article-content" data-name="中文简体">
+                <p>今因祐子事件被告，俗话说“一同干过‘坏’事者成朋友”，两党合作。</p>
+            </div>
+
+            <!-- 语言 2 -->
+            <div class="lang-panel article-content" data-name="中文繁体">
+                <p>今因祐子事件被告，俗話說“一同干過‘坏’事者成朋友”，两黨合作。</p>
+            </div>
+
+            <!-- 语言 3：需要更多语言时，复制上面一整块并修改 data-name 与内容 -->
+            <div class="lang-panel article-content" data-name="中文文言">
+                <p>今以祐子之事為告，古雲“同為‘惡’事者友也”，两黨并也。</p>
+            </div>
+
+            <div class="lang-panel article-content" data-name="ia">
+                <div class="qttf">
+                <p>jinyinYouzishijianbeigao,suhuashuo"yitongganguo'huai'shizhechengpengyou",liangdanghezuo.</p>
+                </div>
+            </div>
+
+            <div class="lang-panel article-content" data-name="老帝">
+                <p>Now 'cezz Youzi zesi bi till BY P, zuhua sei"De 'bad' si togoze 'll bicʌm poŋiu", LiDon bi togoze.</p>
+            </div>
+
+            <div class="lang-panel article-content" data-name="ʌ̀v1.0">
+                <p>Inja Inym Ouyenmo Iz Iŝnqlm Ianjkpoa Eibmopt Aogerrl, Usrt Uahight Uoŝo"Iymgoq Ontar Angreqt Uograin 'Uaihomst' Iŝopta Eẑurt Eμĉrt Eμpmt Ouyent", Iaμland Aμdiuo Ehmr Uozment.
+                </p>
+            </div>
+
+            <div class="lang-panel article-content" data-name="English">
+                <p>Now because of 'youze' event, is tolden by P. As the saying goes, "Doing 'bad' things together can become friends". Two teams are together.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>© 2026 Q 的网站</footer>
+
+    <script>
+        // ========== 语言切换 ==========
+        (function () {
+            const switcher = document.getElementById("langSwitcher");
+            const panels = Array.from(document.querySelectorAll("#articleContent .lang-panel"));
+            if (!switcher || panels.length === 0) return;
+
+            panels.forEach((panel, index) => {
+                const name = panel.getAttribute("data-name") || ("语言 " + (index + 1));
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "lang-btn" + (index === 0 ? " active" : "");
+                btn.textContent = name;
+
+                btn.addEventListener("click", () => {
+                    switcher.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
+                    panels.forEach(p => p.classList.remove("active"));
+                    btn.classList.add("active");
+                    panel.classList.add("active");
+                });
+
+                switcher.appendChild(btn);
+                if (index === 0) panel.classList.add("active"); // 默认显示第一种语言
+            });
+        })();
+
+        // ========== 自动传递 islogin=true 到所有子页面链接（与整站一致） ==========
+        function appendLoginParamToAllLink() {
+            const urlParams = new URLSearchParams(location.search);
+            const isLogin = urlParams.get("islogin") === "true";
+            if (!isLogin) return;
+
+            const allA = document.querySelectorAll("a");
+            allA.forEach(a => {
+                const originHref = a.getAttribute("href");
+                if (!originHref || originHref.startsWith("http")) return;
+
+                const hasParam = originHref.includes("?");
+                if (hasParam) {
+                    a.href = originHref + "&islogin=true";
+                } else {
+                    a.href = originHref + "?islogin=true";
+                }
+            });
+        }
+        appendLoginParamToAllLink();
+    </script>
+</body>
+</html>
