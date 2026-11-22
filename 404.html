@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" href="https://cdn.luogu.com.cn/upload/image_hosting/5bhl3tn0.png" type="image/png" sizes="32x32">
+    <meta charset="utf-8">
+    <title>404 - Q 的网站</title>
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* ========== 本地字体引入（与本文件同目录） ========== */
+        /* 字体只应用于 class="qttf" 的 div，用法：<div class="qttf">文字</div> */
+        @font-face {
+            font-family: "iasans";
+            src: url("ia-11152edit.ttf") format("truetype");
+            font-display: swap;
+        }
+
+        /* ========== 主题变量：清新简约（与整站一致） ========== */
+        :root {
+            --bg: #f5f9f7;            /* 页面底色：极浅的薄荷白 */
+            --card: #ffffff;          /* 卡片底色 */
+            --border: #e4efea;        /* 浅灰绿描边 */
+            --text: #3b4a45;          /* 正文 */
+            --text-strong: #24352f;   /* 标题 */
+            --text-sub: #8fa39c;      /* 次要信息 */
+            --accent: #46b39a;        /* 主题色：清新薄荷绿 */
+            --accent-deep: #2e8a76;   /* 深一档的主题色 */
+            --accent-soft: #eaf6f2;   /* 主题色浅底 */
+        }
+
+        /* ========== 全局重置与基础配置 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 正文默认使用系统字体，保证阅读舒适 */
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text);
+        }
+
+        /* 自定义 TTF 字体：只通过 <div class="qttf"> 使用，不全局套用 */
+        .qttf {
+            font-family: "iasans", "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        ::selection {
+            background: rgba(70, 179, 154, 0.18);
+        }
+
+        /* ========== 站点头部 ========== */
+        header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: var(--text-strong);
+            margin: 26px 0 22px;
+        }
+
+        /* 头部前的小圆点，一点清新的点缀 */
+        header::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* ========== 404 主体卡片 ========== */
+        main {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60, 110, 95, 0.06);
+            padding: 60px 44px 52px;
+            width: 100%;
+            max-width: 780px;
+            margin-bottom: 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 卡片顶部一条薄荷绿细线 */
+        main::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+
+        /* ========== 404 大数字 ========== */
+        .error-code {
+            font-size: clamp(96px, 22vw, 160px);
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: 8px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: var(--accent); /* 不支持裁剪时的回退色 */
+            margin-bottom: 18px;
+            animation: floaty 4s ease-in-out infinite;
+        }
+
+        /* 轻微上下浮动 */
+        @keyframes floaty {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-8px); }
+        }
+
+        /* ========== 标题与说明 ========== */
+        .error-title {
+            font-size: 22px;
+            color: var(--text-strong);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .error-desc {
+            font-size: 15px;
+            color: var(--text-sub);
+            line-height: 1.8;
+            margin-bottom: 32px;
+        }
+
+        /* 小分隔线 */
+        .divider {
+            width: 48px;
+            height: 1px;
+            background: var(--border);
+            margin: 0 auto 30px;
+        }
+
+        /* ========== 返回首页按钮（胶囊形，与 back-btn 呼应） ========== */
+        .home-btn {
+            display: inline-block;
+            color: #ffffff;
+            background: var(--accent);
+            text-decoration: none;
+            font-size: 15px;
+            padding: 11px 28px;
+            border-radius: 999px;
+            transition: all 0.25s ease;
+        }
+
+        .home-btn:hover {
+            background: var(--accent-deep);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(70, 179, 154, 0.3);
+        }
+
+        /* ========== 页脚 ========== */
+        footer {
+            color: #a7b5b0;
+            font-size: 12.5px;
+            margin-top: auto;
+            padding: 16px 0;
+            letter-spacing: 1px;
+        }
+
+        /* ========== 移动端适配 ========== */
+        @media (max-width: 600px) {
+            body {
+                padding: 16px 12px;
+            }
+
+            header {
+                font-size: 17px;
+                letter-spacing: 4px;
+            }
+
+            main {
+                padding: 48px 22px 40px;
+                border-radius: 14px;
+            }
+
+            .error-title {
+                font-size: 19px;
+            }
+        }
+
+        /* 尊重系统的“减少动态效果”设置 */
+        @media (prefers-reduced-motion: reduce) {
+            .error-code {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 站点头部（可自行修改站点名） -->
+    <header>Q 的网站</header>
+
+    <main>
+        <!-- 404 大数字使用自定义字体；去掉 class="qttf" 即回退系统字体 -->
+        <div class="qttf">
+            <div class="error-code">404</div>
+        </div>
+
+        <h1 class="error-title">页面走丢了</h1>
+        <p class="error-desc">你访问的页面不存在，或者已经搬去了别的地方。<br>别急，回到首页继续逛逛吧。</p>
+
+        <div class="divider"></div>
+
+        <a href="/" class="home-btn">← 返回首页</a>
+    </main>
+
+    <footer>© 2026 Q 的网站</footer>
+
+    <script>
+        // 自动传递 islogin=true 到所有子页面链接（与整站一致）
+        function appendLoginParamToAllLink() {
+            const urlParams = new URLSearchParams(location.search);
+            const isLogin = urlParams.get("islogin") === "true";
+            if (!isLogin) return;
+
+            const allA = document.querySelectorAll("a");
+            allA.forEach(a => {
+                const originHref = a.getAttribute("href");
+                if (!originHref || originHref.startsWith("http")) return;
+
+                const hasParam = originHref.includes("?");
+                if (hasParam) {
+                    a.href = originHref + "&islogin=true";
+                } else {
+                    a.href = originHref + "?islogin=true";
+                }
+            });
+        }
+        appendLoginParamToAllLink();
+    </script>
+</body>
+</html>
