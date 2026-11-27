@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>文章广场 - Q 的网站</title>
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* ========== 本地字体：仅 class="qttf" 使用 ========== */
+        @font-face {
+            font-family: "iasans";
+            src: url("ia-11152edit.ttf") format("truetype");
+            font-display: swap;
+        }
+
+        /* ========== 主题变量：清新简约（与整站一致） ========== */
+        :root {
+            --bg: #f5f9f7;
+            --card: #ffffff;
+            --border: #e4efea;
+            --text: #3b4a45;
+            --text-strong: #24352f;
+            --text-sub: #8fa39c;
+            --accent: #46b39a;
+            --accent-deep: #2e8a76;
+            --accent-soft: #eaf6f2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text);
+        }
+
+        .qttf { font-family: "iasans", "Microsoft YaHei", "PingFang SC", sans-serif; }
+        ::selection { background: rgba(70, 179, 154, 0.18); }
+
+        /* ========== 站点头部 ========== */
+        header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: var(--text-strong);
+            margin: 26px 0 22px;
+        }
+        header::before {
+            content: "";
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+        .account-btn {
+            font-size: 13px; font-weight: 400; letter-spacing: 0;
+            color: #ffffff; background: var(--accent);
+            text-decoration: none; padding: 6px 16px;
+            border-radius: 999px; margin-left: 14px;
+            transition: all 0.25s ease;
+        }
+        .account-btn:hover { background: var(--accent-deep); transform: translateY(-1px); }
+
+        /* ========== 主体卡片 ========== */
+        main {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60, 110, 95, 0.06);
+            padding: 34px 40px;
+            width: 100%; max-width: 780px;
+            margin-bottom: 24px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            color: var(--accent-deep); text-decoration: none;
+            font-size: 14px; margin-bottom: 18px; padding: 6px 14px;
+            border-radius: 999px; transition: all 0.25s ease;
+        }
+        .back-btn:hover { color: #ffffff; background: var(--accent); }
+
+        .page-title {
+            font-size: 24px; color: var(--text-strong);
+            margin-bottom: 24px; padding-bottom: 16px;
+            border-bottom: 1px dashed var(--border);
+            font-weight: 700; letter-spacing: 1px;
+        }
+
+        /* ========== 文章卡片列表 ========== */
+        .article-list { display: flex; flex-direction: column; gap: 18px; }
+
+        .article-card {
+            background: #fbfdfc;
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 12px;
+            padding: 20px 22px;
+            transition: all 0.25s ease;
+        }
+        .article-card:hover {
+            transform: translateX(4px);
+            border-left-color: var(--accent-deep);
+            box-shadow: 0 4px 16px rgba(60, 110, 95, 0.08);
+            background: #f4faf7;
+        }
+
+        .article-meta {
+            font-size: 12.5px; color: var(--text-sub);
+            margin-bottom: 10px; letter-spacing: 0.5px;
+        }
+        .article-title {
+            font-size: 19px; color: var(--text-strong);
+            margin-bottom: 8px; font-weight: 600; line-height: 1.5;
+        }
+        .article-desc {
+            font-size: 14px; color: var(--text);
+            margin-bottom: 14px; line-height: 1.7;
+        }
+        .article-link {
+            display: inline-block;
+            color: #ffffff; background: var(--accent);
+            text-decoration: none; font-size: 13px;
+            padding: 7px 16px; border-radius: 999px;
+            transition: all 0.25s ease;
+        }
+        .article-link:hover { background: var(--accent-deep); transform: translateY(-2px); }
+
+        .tag {
+            display: inline-block; font-size: 11px;
+            color: var(--accent-deep); background: var(--accent-soft);
+            padding: 2px 9px; border-radius: 999px; margin-left: 8px;
+        }
+
+        /* ========== 底部 / 页脚 ========== */
+        .link-container {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; box-shadow: 0 6px 24px rgba(60, 110, 95, 0.06);
+            padding: 22px; width: 100%; max-width: 780px;
+            text-align: center; margin-bottom: 26px;
+            color: var(--text-sub); font-size: 13.5px; letter-spacing: 1px;
+        }
+        .link-container a {
+            color: var(--accent-deep); text-decoration: none;
+            border-bottom: 1px solid rgba(70, 179, 154, 0.4);
+            margin: 0 6px;
+        }
+        .link-container a:hover { color: var(--accent); }
+        footer {
+            color: #a7b5b0; font-size: 12.5px;
+            margin-top: auto; padding: 16px 0; letter-spacing: 1px;
+        }
+        .empty-tip { color: var(--text-sub); font-size: 14px; text-align: center; padding: 12px; }
+
+        @media (max-width: 600px) {
+            body { padding: 16px 12px; }
+            header { font-size: 17px; letter-spacing: 4px; }
+            main { padding: 24px 20px; border-radius: 14px; }
+            .page-title { font-size: 21px; }
+            .article-title { font-size: 17px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <span>Q 的网站</span>
+        <a id="accountBtn" class="account-btn" href="login.html">登录</a>
+    </header>
+
+    <main>
+        <a href="/" class="back-btn">← 返回首页</a>
+        <h1 class="page-title"><span class="qttf">文章广场</span></h1>
+
+        <div class="article-list" id="articleList">
+            <!-- ===== 示例文章 1 ===== -->
+            <div class="article-card">
+                <div class="article-meta">撰写日期：2026-11-16 · 分类：随笔<span class="tag">作者 gaji</span></div>
+                <h3 class="article-title"><span class="qttf">共有知识与公共知识</span></h3>
+                <p class="article-desc">从"出头鸟"到纳什均衡，谈那些人人都懂却无人说破的共有知识。</p>
+                <a href="article/1.html" class="article-link">阅读全文 →</a>
+            </div>
+
+            <!-- ===== 示例文章 2 ===== -->
+            <div class="article-card">
+                <div class="article-meta">撰写日期：2026-11-16 · 分类：随笔<span class="tag">作者 D.D.</span></div>
+                <h3 class="article-title"><span class="qttf">论·好</span></h3>
+                <p class="article-desc">"好"是需求的满足，而需求来自不足——一篇关于"好"的拆解。</p>
+                <a href="article/2.html" class="article-link">阅读全文 →</a>
+            </div>
+
+            <!-- ===== 示例文章 3 ===== -->
+            <div class="article-card">
+                <div class="article-meta">撰写日期：2026-11-16 · 分类：时评<span class="tag">作者 曾维</span></div>
+                <h3 class="article-title"><span class="qttf">名为高等动物的包袱</span></h3>
+                <p class="article-desc">由一件 classroom 小事生发，追问道德、教育与人之为人的意义。</p>
+                <a href="article/3.html" class="article-link">阅读全文 →</a>
+            </div>
+        </div>
+    </main>
+
+    <div class="link-container">
+        <span id="articleCount">共 3 篇文章</span> · 
+        <a href="submit.html">投稿</a>
+    </div>
+
+    <footer>© 2026 Q 的网站</footer>
+
+    <!-- islogin 参数自动传递 -->
+    <script>
+        function appendLoginParamToAllLink() {
+            const urlParams = new URLSearchParams(location.search);
+            if (urlParams.get("islogin") !== "true") return;
+            document.querySelectorAll("a").forEach(a => {
+                const href = a.getAttribute("href");
+                if (!href || /^(https?:)?\/\//i.test(href) || href.charAt(0) === "#" || href.indexOf("islogin=") !== -1) return;
+                a.href = href + (href.includes("?") ? "&" : "?") + "islogin=true";
+            });
+        }
+        appendLoginParamToAllLink();
+    </script>
+
+    <!-- Supabase：登录状态 + 已通过投稿列表 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://qaqaeijbozwtlvxgckaz.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_rzCtAhhsB6--u_0U0lNE4w_BgDGUApS";
+        const sb = window.supabase ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+        // 账号按钮
+        (async function () {
+            const btn = document.getElementById("accountBtn");
+            if (!sb || !btn) return;
+            const { data } = await sb.auth.getSession();
+            const user = data.session?.user;
+            if (!user) return;
+            let label = user.email ? user.email.split("@")[0] : "主页";
+            const { data: profile } = await sb.from("profiles").select("nickname").eq("id", user.id).maybeSingle();
+            if (profile && profile.nickname) label = profile.nickname;
+            btn.textContent = label;
+            btn.title = "进入个人主页";
+        })();
+
+        // 加载已通过审核的投稿
+        (async function () {
+            if (!sb) return;
+            const { data, error } = await sb
+                .from("submissions")
+                .select("id, title, category, summary, author_name, author_email, created_at")
+                .eq("status", "approved")
+                .order("created_at", { ascending: false });
+            if (error || !data || !data.length) return;
+
+            const list = document.getElementById("articleList");
+            const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+            data.forEach(row => {
+                const card = document.createElement("div");
+                card.className = "article-card";
+                const who = row.author_name || (row.author_email ? row.author_email.split("@")[0] : "匿名");
+                const date = (row.created_at || "").slice(0, 10);
+                const cat = row.category || "投稿";
+                const summary = row.summary ? esc(row.summary) : "点击查看全文";
+                card.innerHTML =
+                    '<div class="article-meta">撰写日期：' + esc(date) + ' · 分类：' + esc(cat) +
+                    '<span class="tag">作者 ' + esc(who) + '</span></div>' +
+                    '<h3 class="article-title"><span class="qttf">' + esc(row.title) + '</span></h3>' +
+                    '<p class="article-desc">' + summary + '</p>' +
+                    '<a href="article/view.html?id=' + encodeURIComponent(row.id) + '" class="article-link">阅读全文 →</a>';
+                list.appendChild(card);
+            });
+            document.getElementById("articleCount").textContent = "共 " + (3 + data.length) + " 篇文章";
+        })();
+    </script>
+</body>
+</html>
