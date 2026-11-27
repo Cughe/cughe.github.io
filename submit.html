@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>投稿 - Q 的网站</title>
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @font-face { font-family: "iasans"; src: url("ia-11152edit.ttf") format("truetype"); font-display: swap; }
+        :root {
+            --bg: #f5f9f7; --card: #ffffff; --border: #e4efea;
+            --text: #3b4a45; --text-strong: #24352f; --text-sub: #8fa39c;
+            --accent: #46b39a; --accent-deep: #2e8a76; --accent-soft: #eaf6f2;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+            background: var(--bg); min-height: 100vh; padding: 24px 16px;
+            display: flex; flex-direction: column; align-items: center; color: var(--text); }
+        .qttf { font-family: "iasans", "Microsoft YaHei", "PingFang SC", sans-serif; }
+        ::selection { background: rgba(70,179,154,0.18); }
+        header { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 600;
+            letter-spacing: 6px; color: var(--text-strong); margin: 26px 0 22px; }
+        header::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+        .account-btn { font-size: 13px; font-weight: 400; letter-spacing: 0; color: #fff; background: var(--accent);
+            text-decoration: none; padding: 6px 16px; border-radius: 999px; margin-left: 14px; transition: all .25s ease; }
+        .account-btn:hover { background: var(--accent-deep); transform: translateY(-1px); }
+        main { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60,110,95,0.06); padding: 36px 40px; width: 100%; max-width: 720px; margin-bottom: 24px; }
+        .back-btn { display: inline-block; color: var(--accent-deep); text-decoration: none; font-size: 14px;
+            margin-bottom: 18px; padding: 6px 14px; border-radius: 999px; transition: all .25s ease; }
+        .back-btn:hover { color: #fff; background: var(--accent); }
+        .page-title { font-size: 24px; color: var(--text-strong); margin-bottom: 6px; font-weight: 700; letter-spacing: 1px; }
+        .page-sub { font-size: 13px; color: var(--text-sub); margin-bottom: 24px; }
+        .field { margin-bottom: 18px; }
+        .field label { display: block; font-size: 13.5px; color: var(--text-strong); margin-bottom: 7px; font-weight: 600; }
+        .field label .req { color: #d9635a; }
+        input[type=text], textarea { width: 100%; font-size: 14px; color: var(--text);
+            background: #fbfdfc; border: 1px solid var(--border); border-radius: 10px;
+            padding: 11px 13px; outline: none; transition: border-color .25s ease, box-shadow .25s ease;
+            font-family: inherit; }
+        input[type=text]:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(70,179,154,0.12); }
+        textarea { resize: vertical; line-height: 1.7; }
+        textarea#content { min-height: 260px; }
+        .row { display: flex; gap: 16px; }
+        .row .field { flex: 1; }
+        .submit-btn { width: 100%; font-size: 15px; font-weight: 600; color: #fff; background: var(--accent);
+            border: none; border-radius: 999px; padding: 12px; cursor: pointer; transition: all .25s ease; margin-top: 8px; }
+        .submit-btn:hover { background: var(--accent-deep); transform: translateY(-2px); }
+        .submit-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+        .notice { font-size: 12.5px; color: var(--text-sub); margin-top: 14px; text-align: center; line-height: 1.7; }
+        .msg { font-size: 14px; padding: 12px 16px; border-radius: 10px; margin-bottom: 18px; display: none; }
+        .msg.ok { display: block; background: var(--accent-soft); color: var(--accent-deep); }
+        .msg.err { display: block; background: #fdf0ef; color: #b8544b; }
+        .login-hint { background: var(--accent-soft); color: var(--accent-deep); padding: 16px 18px;
+            border-radius: 12px; font-size: 14.5px; line-height: 1.8; text-align: center; }
+        .login-hint a { color: var(--accent-deep); font-weight: 600; }
+        footer { color: #a7b5b0; font-size: 12.5px; margin-top: auto; padding: 16px 0; letter-spacing: 1px; }
+        @media (max-width: 600px) {
+            body { padding: 16px 12px; }
+            header { font-size: 17px; letter-spacing: 4px; }
+            main { padding: 24px 20px; border-radius: 14px; }
+            .page-title { font-size: 21px; }
+            .row { flex-direction: column; gap: 0; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <span>Q 的网站</span>
+        <a id="accountBtn" class="account-btn" href="login.html">登录</a>
+    </header>
+
+    <main>
+        <a href="article.html" class="back-btn">← 返回文章广场</a>
+        <h1 class="page-title"><span class="qttf">投稿</span></h1>
+        <p class="page-sub">写下你的文章，提交后由站主审核，通过后即会展示在文章广场。</p>
+
+        <div id="loginGate" class="login-hint" style="display:none">
+            投稿需要先登录。<a href="login.html">点此登录 →</a>
+        </div>
+
+        <form id="submitForm" style="display:none">
+            <div class="msg" id="msg"></div>
+            <div class="row">
+                <div class="field">
+                    <label for="title">标题 <span class="req">*</span></label>
+                    <input type="text" id="title" maxlength="80" placeholder="给文章起个标题" required>
+                </div>
+                <div class="field">
+                    <label for="category">分类</label>
+                    <input type="text" id="category" maxlength="20" placeholder="如：随笔 / 技术 / 时评" value="投稿">
+                </div>
+            </div>
+            <div class="field">
+                <label for="authorName">署名</label>
+                <input type="text" id="authorName" maxlength="30" placeholder="留空则使用你的昵称或邮箱前缀">
+            </div>
+            <div class="field">
+                <label for="summary">简介</label>
+                <input type="text" id="summary" maxlength="120" placeholder="一句话简介，留空则显示默认提示">
+            </div>
+            <div class="field">
+                <label for="content">正文 <span class="req">*</span></label>
+                <textarea id="content" placeholder="在此撰写正文……"></textarea>
+            </div>
+            <button type="submit" id="submitBtn" class="submit-btn">提交投稿</button>
+            <p class="notice">提交后状态为"待审核"，站主通过后文章会自动出现在文章广场。<br>请勿提交违法违规内容。</p>
+        </form>
+    </main>
+
+    <footer>© 2026 Q 的网站</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://qaqaeijbozwtlvxgckaz.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_rzCtAhhsB6--u_0U0lNE4w_BgDGUApS";
+        const sb = window.supabase ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+        let currentUser = null;
+
+        (async function () {
+            const btn = document.getElementById("accountBtn");
+            if (!sb) return;
+            const { data } = await sb.auth.getSession();
+            const user = data.session?.user;
+            if (!user) {
+                document.getElementById("loginGate").style.display = "block";
+                return;
+            }
+            currentUser = user;
+            let label = user.email ? user.email.split("@")[0] : "主页";
+            const { data: profile } = await sb.from("profiles").select("nickname").eq("id", user.id).maybeSingle();
+            if (profile && profile.nickname) { label = profile.nickname; document.getElementById("authorName").placeholder = "留空则使用：" + label; }
+            btn.textContent = label; btn.title = "进入个人主页";
+            document.getElementById("submitForm").style.display = "block";
+        })();
+
+        document.getElementById("submitForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            if (!sb || !currentUser) return;
+            const msg = document.getElementById("msg");
+            const btn = document.getElementById("submitBtn");
+            const title = document.getElementById("title").value.trim();
+            const content = document.getElementById("content").value.trim();
+            if (!title || !content) {
+                msg.className = "msg err"; msg.textContent = "标题和正文不能为空。";
+                return;
+            }
+            btn.disabled = true; btn.textContent = "提交中…";
+            const payload = {
+                title: title,
+                category: document.getElementById("category").value.trim() || "投稿",
+                summary: document.getElementById("summary").value.trim(),
+                content: content,
+                author_name: document.getElementById("authorName").value.trim(),
+                author_email: currentUser.email || "",
+                user_id: currentUser.id,
+                status: "pending"
+            };
+            const { error } = await sb.from("submissions").insert([payload]);
+            btn.disabled = false; btn.textContent = "提交投稿";
+            if (error) {
+                msg.className = "msg err";
+                msg.textContent = "提交失败：" + (error.message || "请稍后重试，或确认数据表已创建。");
+            } else {
+                msg.className = "msg ok";
+                msg.textContent = "提交成功！文章已进入待审核队列，通过后会自动显示在文章广场。";
+                document.getElementById("submitForm").reset();
+            }
+        });
+    </script>
+</body>
+</html>
