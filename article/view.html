@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>文章 - Q 的网站</title>
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @font-face { font-family: "iasans"; src: url("../ia-11152edit.ttf") format("truetype"); font-display: swap; }
+        :root {
+            --bg: #f5f9f7; --card: #ffffff; --border: #e4efea;
+            --text: #3b4a45; --text-strong: #24352f; --text-sub: #8fa39c;
+            --accent: #46b39a; --accent-deep: #2e8a76; --accent-soft: #eaf6f2;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+            background: var(--bg); min-height: 100vh; padding: 24px 16px;
+            display: flex; flex-direction: column; align-items: center; color: var(--text); }
+        .qttf { font-family: "iasans", "Microsoft YaHei", "PingFang SC", sans-serif; }
+        ::selection { background: rgba(70,179,154,0.18); }
+        header { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 600;
+            letter-spacing: 6px; color: var(--text-strong); margin: 26px 0 22px; }
+        header::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+        .account-btn { font-size: 13px; font-weight: 400; letter-spacing: 0; color: #fff; background: var(--accent);
+            text-decoration: none; padding: 6px 16px; border-radius: 999px; margin-left: 14px; transition: all .25s ease; }
+        .account-btn:hover { background: var(--accent-deep); transform: translateY(-1px); }
+        main { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60,110,95,0.06); padding: 40px 44px; width: 100%; max-width: 780px; margin-bottom: 24px; }
+        .back-btn { display: inline-block; color: var(--accent-deep); text-decoration: none; font-size: 14px;
+            margin-bottom: 22px; padding: 6px 14px; border-radius: 999px; transition: all .25s ease; }
+        .back-btn:hover { color: #fff; background: var(--accent); }
+        .article-title { font-size: 26px; color: var(--text-strong); margin-bottom: 12px; font-weight: 700; line-height: 1.5; letter-spacing: .5px; }
+        .article-meta { font-size: 13px; color: var(--text-sub); margin-bottom: 28px; padding-bottom: 16px;
+            border-bottom: 1px dashed var(--border); letter-spacing: .5px; }
+        .article-content { font-size: 16px; line-height: 1.9; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+        .link-container { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60,110,95,0.06); padding: 26px; width: 100%; max-width: 780px;
+            text-align: center; margin-bottom: 26px; color: var(--text-sub); font-size: 14px; letter-spacing: 1px; }
+        footer { color: #a7b5b0; font-size: 12.5px; margin-top: auto; padding: 16px 0; letter-spacing: 1px; }
+        .loading { text-align: center; color: var(--text-sub); padding: 40px 0; font-size: 14px; }
+        @media (max-width: 600px) {
+            body { padding: 16px 12px; }
+            header { font-size: 17px; letter-spacing: 4px; }
+            main { padding: 26px 22px; border-radius: 14px; }
+            .article-title { font-size: 22px; }
+            .article-content { font-size: 15.5px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <span>Q 的网站</span>
+        <a id="accountBtn" class="account-btn" href="../login.html">登录</a>
+    </header>
+    <main>
+        <a href="../article.html" class="back-btn">← 返回文章广场</a>
+        <div id="loading" class="loading">正在加载文章…</div>
+        <div id="articleBox" style="display:none">
+            <h1 class="article-title"><span class="qttf" id="title"></span></h1>
+            <div class="article-meta" id="meta"></div>
+            <div class="article-content" id="content"></div>
+        </div>
+        <div id="notFound" class="loading" style="display:none">文章不存在或尚未通过审核。</div>
+    </main>
+    <div class="link-container"><span class="qttf">感谢阅读 · Enjoy Reading</span></div>
+    <footer>© 2026 Q 的网站</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://qaqaeijbozwtlvxgckaz.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_rzCtAhhsB6--u_0U0lNE4w_BgDGUApS";
+        const sb = window.supabase ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+        const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+        (async function () {
+            // 账号按钮
+            if (sb) {
+                const btn = document.getElementById("accountBtn");
+                const { data } = await sb.auth.getSession();
+                const user = data.session?.user;
+                if (user) {
+                    let label = user.email ? user.email.split("@")[0] : "主页";
+                    const { data: profile } = await sb.from("profiles").select("nickname").eq("id", user.id).maybeSingle();
+                    if (profile && profile.nickname) label = profile.nickname;
+                    btn.textContent = label; btn.title = "进入个人主页";
+                }
+            }
+            // 读取文章
+            const id = new URLSearchParams(location.search).get("id");
+            if (!sb || !id) { showNotFound(); return; }
+            const { data, error } = await sb.from("submissions")
+                .select("title, category, summary, content, author_name, author_email, created_at")
+                .eq("id", id).eq("status", "approved").maybeSingle();
+            if (error || !data) { showNotFound(); return; }
+            document.getElementById("title").textContent = data.title || "未命名";
+            const who = data.author_name || (data.author_email ? data.author_email.split("@")[0] : "匿名");
+            const date = (data.created_at || "").slice(0, 10);
+            document.getElementById("meta").textContent = "撰写日期：" + date + " · 分类：" + (data.category || "投稿") + " · 作者：" + who;
+            document.getElementById("content").textContent = data.content || "";
+            document.title = (data.title || "文章") + " - Q 的网站";
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("articleBox").style.display = "block";
+        })();
+
+        function showNotFound() {
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("notFound").style.display = "block";
+        }
+    </script>
+</body>
+</html>
