@@ -81,6 +81,7 @@
 
         /* 头部账号按钮（登录 / 主页） */
         .account-btn {
+            position: relative;
             font-size: 13px;
             font-weight: 400;
             letter-spacing: 0;
@@ -96,6 +97,22 @@
         .account-btn:hover {
             background: var(--accent-deep);
             transform: translateY(-1px);
+        }
+
+        /* 未读私信红点 */
+        .account-dot {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 10px;
+            height: 10px;
+            background: #e05a4f;
+            border: 2px solid var(--bg);
+            border-radius: 50%;
+        }
+
+        .hidden {
+            display: none !important;
         }
 
         /* ========== 主体卡片 ========== */
@@ -325,7 +342,7 @@
     <header>
         <span>Q 的网站</span>
         <!-- 账号入口：未登录显示“登录”，已登录显示昵称并进入个人主页 -->
-        <a id="accountBtn" class="account-btn" href="login.html">登录</a>
+        <a id="accountBtn" class="account-btn" href="login.html">登录<span id="accountDot" class="account-dot hidden"></span></a>
     </header>
 
     <main>
@@ -440,13 +457,14 @@ cout << "棍母";
 
         (async function () {
             const btn = document.getElementById("accountBtn");
+            const dot = document.getElementById("accountDot");
             if (!btn || !window.supabase) return; // SDK 未加载或按钮不存在则保持默认“登录”
             const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             const { data } = await sb.auth.getSession();
             const user = data.session?.user;
             if (!user) return; // 未登录：保持“登录”
 
-            // 已登录：优先显示昵称，其次邮箱前缀
+            // 已登录：优先显示昵称，其次邮箱前缀（只改文字节点，保留红点）
             let label = user.email ? user.email.split("@")[0] : "主页";
             const { data: profile } = await sb
                 .from("profiles")
@@ -454,8 +472,29 @@ cout << "棍母";
                 .eq("id", user.id)
                 .maybeSingle();
             if (profile && profile.nickname) label = profile.nickname;
-            btn.textContent = label;
+            btn.firstChild.textContent = label;
             btn.title = "进入个人主页";
+
+            // 有未读私信时显示红点
+            if (dot) {
+                async function refreshDot() {
+                    const { count } = await sb
+                        .from("messages")
+                        .select("id", { count: "exact", head: true })
+                        .eq("receiver_id", user.id)
+                        .eq("read", false);
+                    if (count > 0) dot.classList.remove("hidden");
+                    else dot.classList.add("hidden");
+                }
+                refreshDot();
+                // 实时收到新私信时也亮起红点
+                sb.channel("home-dm-" + user.id)
+                    .on("postgres_changes", {
+                        event: "INSERT", schema: "public", table: "messages",
+                        filter: "receiver_id=eq." + user.id
+                    }, refreshDot)
+                    .subscribe();
+            }
         })();
     </script>
 </body>
