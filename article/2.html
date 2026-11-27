@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>论·好 - Q 的网站</title>
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @font-face { font-family: "iasans"; src: url("../ia-11152edit.ttf") format("truetype"); font-display: swap; }
+        :root {
+            --bg: #f5f9f7; --card: #ffffff; --border: #e4efea;
+            --text: #3b4a45; --text-strong: #24352f; --text-sub: #8fa39c;
+            --accent: #46b39a; --accent-deep: #2e8a76; --accent-soft: #eaf6f2; --code-bg: #f4f8f6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+            background: var(--bg); min-height: 100vh; padding: 24px 16px;
+            display: flex; flex-direction: column; align-items: center; color: var(--text); }
+        .qttf { font-family: "iasans", "Microsoft YaHei", "PingFang SC", sans-serif; }
+        ::selection { background: rgba(70,179,154,0.18); }
+        header { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 600;
+            letter-spacing: 6px; color: var(--text-strong); margin: 26px 0 22px; }
+        header::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+        .account-btn { font-size: 13px; font-weight: 400; letter-spacing: 0; color: #fff; background: var(--accent);
+            text-decoration: none; padding: 6px 16px; border-radius: 999px; margin-left: 14px; transition: all .25s ease; }
+        .account-btn:hover { background: var(--accent-deep); transform: translateY(-1px); }
+        main { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60,110,95,0.06); padding: 40px 44px; width: 100%; max-width: 780px; margin-bottom: 24px; }
+        .back-btn { display: inline-block; color: var(--accent-deep); text-decoration: none; font-size: 14px;
+            margin-bottom: 22px; padding: 6px 14px; border-radius: 999px; transition: all .25s ease; }
+        .back-btn:hover { color: #fff; background: var(--accent); }
+        .article-title { font-size: 26px; color: var(--text-strong); margin-bottom: 12px; font-weight: 700; line-height: 1.5; letter-spacing: .5px; }
+        .article-meta { font-size: 13px; color: var(--text-sub); margin-bottom: 28px; padding-bottom: 16px;
+            border-bottom: 1px dashed var(--border); letter-spacing: .5px; }
+        .article-content { font-size: 16px; line-height: 1.9; color: var(--text); }
+        .article-content p { margin-bottom: 18px; text-align: left; }
+        .link-container { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60,110,95,0.06); padding: 26px; width: 100%; max-width: 780px;
+            text-align: center; margin-bottom: 26px; color: var(--text-sub); font-size: 14px; line-height: 1.8; letter-spacing: 1px; }
+        footer { color: #a7b5b0; font-size: 12.5px; margin-top: auto; padding: 16px 0; letter-spacing: 1px; }
+        @media (max-width: 600px) {
+            body { padding: 16px 12px; }
+            header { font-size: 17px; letter-spacing: 4px; }
+            main { padding: 26px 22px; border-radius: 14px; }
+            .article-title { font-size: 22px; }
+            .article-content { font-size: 15.5px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <span>Q 的网站</span>
+        <a id="accountBtn" class="account-btn" href="../login.html">登录</a>
+    </header>
+    <main>
+        <a href="../article.html" class="back-btn">← 返回文章广场</a>
+        <h1 class="article-title"><span class="qttf">论·好</span></h1>
+        <div class="article-meta">撰写日期：2026-11-16 · 分类：随笔 · 作者：D.D.</div>
+        <div class="article-content">
+            <p>“好” 在汉语，乃是一 “女” 一 “子”，两人同时为一 “女” 一 “子” 的概率为 ½ ，因为它其实是一种契合了需求的和谐状态。因此，它既不杂，无多余杂物；又什么都不少。恰好的状态，亦是人之需求。可这样不多不少之物于世有多少？故好是避开各种不幸后剩下的一点点的东西；而不幸又是各不相同的，故 “幸福的家庭大多相似，不幸的家庭各有不幸” 有矣。<br><br>而好并非一定之尺度，知何为 “不幸”，方知何为好。而不同年代的不足之处各不同，好之准亦不同，况且在同一时代不同人之孬亦皆有异。因此什么是好，谁也不知道，它总随境遇而变。故当好在社会有个准则之时，常是在数十年后无法成为人类的指标。因此——什么都无则好……吗？<br><br>看来思绪已乱了，我们重梳理一遍。好是需求的满足，而需求来自于不足，不足是人对当前的一种本能的不满。既是本能，则无可避免，故任何人对好的看法皆来于自己的不满。难怪 “知足常乐”。<br><br>所以，不贪，大抵便可以完成自己个体意识的好了。但，在他人眼中呢？在他人眼中是绝对达不到的，因为每人贪的方面不同。你说这好那不好，他说那好这不好，且又没有不贪的人（注：我说的是人），因此，其实人应活于自己的好中，不负，且做自己认为正确的事罢了。  <br><br>——论·好</p>
+        </div>
+    </main>
+    <div class="link-container"><span class="qttf">感谢阅读 · Enjoy Reading</span></div>
+    <footer>© 2026 Q 的网站</footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://qaqaeijbozwtlvxgckaz.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_rzCtAhhsB6--u_0U0lNE4w_BgDGUApS";
+        (async function () {
+            const btn = document.getElementById("accountBtn");
+            if (!window.supabase || !btn) return;
+            const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const { data } = await sb.auth.getSession();
+            const user = data.session?.user;
+            if (!user) return;
+            let label = user.email ? user.email.split("@")[0] : "主页";
+            const { data: profile } = await sb.from("profiles").select("nickname").eq("id", user.id).maybeSingle();
+            if (profile && profile.nickname) label = profile.nickname;
+            btn.textContent = label; btn.title = "进入个人主页";
+        })();
+    </script>
+</body>
+</html>
