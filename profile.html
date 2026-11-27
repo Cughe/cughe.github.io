@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" href="https://cdn.luogu.com.cn/upload/image_hosting/5bhl3tn0.png" type="image/png" sizes="32x32">
+    <meta charset="utf-8">
+    <title>修改资料 - Q 的网站</title>
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* ========== 本地字体（仅 class="qttf" 使用） ========== */
+        @font-face {
+            font-family: "iasans";
+            src: url("ia-11152edit.ttf") format("truetype");
+            font-display: swap;
+        }
+
+        /* ========== 主题变量：清新简约（与整站一致） ========== */
+        :root {
+            --bg: #f5f9f7;
+            --card: #ffffff;
+            --border: #e4efea;
+            --text: #3b4a45;
+            --text-strong: #24352f;
+            --text-sub: #8fa39c;
+            --accent: #46b39a;
+            --accent-deep: #2e8a76;
+            --accent-soft: #eaf6f2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text);
+        }
+
+        .qttf { font-family: "iasans", "Microsoft YaHei", "PingFang SC", sans-serif; }
+        ::selection { background: rgba(70, 179, 154, 0.18); }
+
+        /* 站点头部 */
+        header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: var(--text-strong);
+            margin: 26px 0 22px;
+        }
+        header::before {
+            content: "";
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+        .account-btn {
+            font-size: 13px; font-weight: 400; letter-spacing: 0;
+            color: #fff; background: var(--accent);
+            text-decoration: none;
+            padding: 6px 16px; border-radius: 999px; margin-left: 14px;
+            transition: all 0.25s ease;
+        }
+        .account-btn:hover { background: var(--accent-deep); transform: translateY(-1px); }
+
+        /* 主体卡片 */
+        main {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60, 110, 95, 0.06);
+            padding: 40px 44px 44px;
+            width: 100%;
+            max-width: 780px;
+            margin-bottom: 24px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            color: var(--accent-deep);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 22px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            transition: all 0.25s ease;
+        }
+        .back-btn:hover { color: #fff; background: var(--accent); }
+
+        .doc-title {
+            font-size: 30px;
+            color: var(--text-strong);
+            font-weight: 700;
+            line-height: 1.4;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .doc-subtitle {
+            font-size: 15px;
+            color: var(--text-sub);
+            line-height: 1.7;
+            text-align: center;
+            margin-bottom: 26px;
+        }
+        .divider {
+            width: 48px; height: 1px;
+            background: var(--border);
+            margin: 0 auto 28px;
+        }
+
+        .auth-box { max-width: 420px; margin: 0 auto; }
+
+        /* 头像预览 */
+        .avatar-preview {
+            width: 76px; height: 76px;
+            border-radius: 50%;
+            background: var(--accent-soft);
+            color: var(--accent-deep);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px; font-weight: 600;
+            margin: 0 auto 24px;
+            overflow: hidden;
+        }
+        .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+        .field { margin-bottom: 18px; }
+        .field label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+        }
+        .field input, .field textarea {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 15px;
+            font-family: inherit;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+        .field textarea { resize: vertical; }
+        .field input:focus, .field textarea:focus {
+            border-color: var(--accent);
+            background: #ffffff;
+        }
+
+        .msg {
+            min-height: 20px;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 2px 0 14px;
+            color: var(--text-sub);
+        }
+        .msg.error { color: #c0392b; }
+        .msg.success { color: var(--accent-deep); }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 15px;
+            color: #ffffff;
+            background: var(--accent);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .btn-primary:hover { background: var(--accent-deep); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .btn-secondary {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            font-family: inherit;
+            font-size: 15px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--accent-deep);
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .btn-secondary:hover { border-color: var(--accent); background: var(--accent-soft); }
+
+        .hidden { display: none !important; }
+
+        footer { color: #a7b5b0; font-size: 12.5px; margin-top: auto; padding: 16px 0; letter-spacing: 1px; }
+
+        @media (max-width: 600px) {
+            body { padding: 16px 12px; }
+            header { font-size: 17px; letter-spacing: 4px; }
+            main { padding: 28px 22px; border-radius: 14px; }
+            .doc-title { font-size: 25px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <span>Q 的网站</span>
+        <a id="accountBtn" class="account-btn" href="login.html">个人中心</a>
+    </header>
+
+    <main>
+        <a href="login.html" class="back-btn">← 返回个人中心</a>
+        <h1 class="doc-title"><span class="qttf">修改资料</span></h1>
+        <p class="doc-subtitle">头像、昵称与个性签名</p>
+        <div class="divider"></div>
+
+        <!-- 未登录提示 -->
+        <div class="auth-box" id="guestView">
+            <p class="doc-subtitle">请先登录后再修改资料</p>
+            <a href="login.html" class="btn-secondary">前往登录</a>
+        </div>
+
+        <!-- 已登录：资料编辑 -->
+        <div class="auth-box hidden" id="editView">
+            <div class="avatar-preview" id="avatarPreview">Q</div>
+            <div class="field">
+                <label for="nickname">昵称</label>
+                <input id="nickname" type="text" placeholder="给自己起个名字" maxlength="40">
+            </div>
+            <div class="field">
+                <label for="avatarUrl">头像链接</label>
+                <input id="avatarUrl" type="url" placeholder="https://...（图片地址）">
+            </div>
+            <div class="field">
+                <label for="bio">个性签名</label>
+                <textarea id="bio" rows="3" placeholder="写点什么介绍自己" maxlength="200"></textarea>
+            </div>
+            <p id="profileMsg" class="msg" role="status"></p>
+            <button type="button" id="saveBtn" class="btn-primary">保存资料</button>
+            <a href="login.html" class="btn-secondary">返回个人中心</a>
+        </div>
+    </main>
+
+    <footer>© 2026 Q 的网站</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://qaqaeijbozwtlvxgckaz.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_rzCtAhhsB6--u_0U0lNE4w_BgDGUApS";
+
+        const guestView = document.getElementById("guestView");
+        const editView = document.getElementById("editView");
+        const avatarPreview = document.getElementById("avatarPreview");
+        const nicknameEl = document.getElementById("nickname");
+        const avatarUrlEl = document.getElementById("avatarUrl");
+        const bioEl = document.getElementById("bio");
+        const profileMsgEl = document.getElementById("profileMsg");
+        const saveBtn = document.getElementById("saveBtn");
+        const accountBtn = document.getElementById("accountBtn");
+
+        let sb = null;
+        let currentUser = null;
+        if (window.supabase) {
+            sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        function setMsg(text, type) {
+            profileMsgEl.textContent = text || "";
+            profileMsgEl.className = "msg" + (type ? " " + type : "");
+        }
+
+        // 头像预览：优先图片链接，其次昵称首字，最后邮箱首字
+        function updateAvatar(avatarUrl, nickname, email) {
+            avatarPreview.innerHTML = "";
+            if (avatarUrl) {
+                const img = document.createElement("img");
+                img.src = avatarUrl;
+                img.alt = "头像";
+                img.onerror = () => { avatarPreview.textContent = (nickname || email || "Q").charAt(0).toUpperCase(); };
+                avatarPreview.appendChild(img);
+            } else {
+                avatarPreview.textContent = (nickname || email || "Q").charAt(0).toUpperCase();
+            }
+        }
+
+        async function loadProfile(user) {
+            setMsg("");
+            const { data, error } = await sb
+                .from("profiles")
+                .select("nickname, avatar_url, bio")
+                .eq("id", user.id)
+                .maybeSingle();
+            if (error) {
+                setMsg("资料读取失败：" + error.message, "error");
+                return;
+            }
+            const p = data || {};
+            nicknameEl.value = p.nickname || "";
+            avatarUrlEl.value = p.avatar_url || "";
+            bioEl.value = p.bio || "";
+            if (p.nickname && accountBtn) accountBtn.textContent = p.nickname;
+            updateAvatar(p.avatar_url, p.nickname, user.email);
+        }
+
+        saveBtn.addEventListener("click", async () => {
+            if (!sb || !currentUser) return;
+            setMsg("");
+            saveBtn.disabled = true;
+            try {
+                const { error } = await sb.from("profiles").upsert({
+                    id: currentUser.id,
+                    nickname: nicknameEl.value.trim(),
+                    avatar_url: avatarUrlEl.value.trim(),
+                    bio: bioEl.value.trim(),
+                    updated_at: new Date().toISOString()
+                });
+                if (error) throw error;
+                updateAvatar(avatarUrlEl.value.trim(), nicknameEl.value.trim(), currentUser.email);
+                setMsg("资料已保存", "success");
+            } catch (err) {
+                setMsg(err.message || "保存失败，请稍后重试", "error");
+            } finally {
+                saveBtn.disabled = false;
+            }
+        });
+
+        // 输入时实时预览头像
+        avatarUrlEl.addEventListener("input", () => updateAvatar(avatarUrlEl.value.trim(), nicknameEl.value.trim(), currentUser && currentUser.email));
+        nicknameEl.addEventListener("input", () => {
+            if (!avatarUrlEl.value.trim()) updateAvatar("", nicknameEl.value.trim(), currentUser && currentUser.email);
+        });
+
+        (async function init() {
+            if (!sb) {
+                setMsg("Supabase 加载失败，请刷新页面重试", "error");
+                return;
+            }
+            const { data } = await sb.auth.getSession();
+            const user = data.session && data.session.user;
+            if (!user) {
+                guestView.classList.remove("hidden");
+                editView.classList.add("hidden");
+                return;
+            }
+            currentUser = user;
+            guestView.classList.add("hidden");
+            editView.classList.remove("hidden");
+            await loadProfile(user);
+        })();
+    </script>
+</body>
+</html>
