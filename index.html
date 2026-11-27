@@ -79,6 +79,25 @@
             background: var(--accent);
         }
 
+        /* 头部账号按钮（登录 / 主页） */
+        .account-btn {
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 0;
+            color: #ffffff;
+            background: var(--accent);
+            text-decoration: none;
+            padding: 6px 16px;
+            border-radius: 999px;
+            margin-left: 14px;
+            transition: all 0.25s ease;
+        }
+
+        .account-btn:hover {
+            background: var(--accent-deep);
+            transform: translateY(-1px);
+        }
+
         /* ========== 主体卡片 ========== */
         main {
             background: var(--card);
@@ -303,7 +322,11 @@
 </head>
 <body>
     <!-- 站点头部（可自行修改站点名） -->
-    <header>Q 的网站</header>
+    <header>
+        <span>Q 的网站</span>
+        <!-- 账号入口：未登录显示“登录”，已登录显示昵称并进入个人主页 -->
+        <a id="accountBtn" class="account-btn" href="login.html">登录</a>
+    </header>
 
     <main>
 
@@ -431,6 +454,34 @@ cout << "棍母";
         }
         // 页面加载执行
         appendLoginParamToAllLink();
+    </script>
+
+    <!-- Supabase 官方 JS SDK：用于读取登录状态与昵称 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // 与 login.html 保持一致的 Supabase 项目信息
+        const SUPABASE_URL = "https://qaqaeijbozwtlvxgckaz.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_rzCtAhhsB6--u_0U0lNE4w_BgDGUApS";
+
+        (async function () {
+            const btn = document.getElementById("accountBtn");
+            if (!btn || !window.supabase) return; // SDK 未加载或按钮不存在则保持默认“登录”
+            const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const { data } = await sb.auth.getSession();
+            const user = data.session?.user;
+            if (!user) return; // 未登录：保持“登录”
+
+            // 已登录：优先显示昵称，其次邮箱前缀
+            let label = user.email ? user.email.split("@")[0] : "主页";
+            const { data: profile } = await sb
+                .from("profiles")
+                .select("nickname")
+                .eq("id", user.id)
+                .maybeSingle();
+            if (profile && profile.nickname) label = profile.nickname;
+            btn.textContent = label;
+            btn.title = "进入个人主页";
+        })();
     </script>
 </body>
 </html>
