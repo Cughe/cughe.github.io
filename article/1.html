@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>共有知识与公共知识 - Q 的网站</title>
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @font-face { font-family: "iasans"; src: url("../ia-11152edit.ttf") format("truetype"); font-display: swap; }
+        :root {
+            --bg: #f5f9f7; --card: #ffffff; --border: #e4efea;
+            --text: #3b4a45; --text-strong: #24352f; --text-sub: #8fa39c;
+            --accent: #46b39a; --accent-deep: #2e8a76; --accent-soft: #eaf6f2; --code-bg: #f4f8f6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+            background: var(--bg); min-height: 100vh; padding: 24px 16px;
+            display: flex; flex-direction: column; align-items: center; color: var(--text); }
+        .qttf { font-family: "iasans", "Microsoft YaHei", "PingFang SC", sans-serif; }
+        ::selection { background: rgba(70,179,154,0.18); }
+        header { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 600;
+            letter-spacing: 6px; color: var(--text-strong); margin: 26px 0 22px; }
+        header::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+        .account-btn { font-size: 13px; font-weight: 400; letter-spacing: 0; color: #fff; background: var(--accent);
+            text-decoration: none; padding: 6px 16px; border-radius: 999px; margin-left: 14px; transition: all .25s ease; }
+        .account-btn:hover { background: var(--accent-deep); transform: translateY(-1px); }
+        main { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60,110,95,0.06); padding: 40px 44px; width: 100%; max-width: 780px; margin-bottom: 24px; }
+        .back-btn { display: inline-block; color: var(--accent-deep); text-decoration: none; font-size: 14px;
+            margin-bottom: 22px; padding: 6px 14px; border-radius: 999px; transition: all .25s ease; }
+        .back-btn:hover { color: #fff; background: var(--accent); }
+        .article-title { font-size: 26px; color: var(--text-strong); margin-bottom: 12px; font-weight: 700; line-height: 1.5; letter-spacing: .5px; }
+        .article-meta { font-size: 13px; color: var(--text-sub); margin-bottom: 28px; padding-bottom: 16px;
+            border-bottom: 1px dashed var(--border); letter-spacing: .5px; }
+        .article-content { font-size: 16px; line-height: 1.9; color: var(--text); }
+        .article-content p { margin-bottom: 18px; text-align: left; }
+        .link-container { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60,110,95,0.06); padding: 26px; width: 100%; max-width: 780px;
+            text-align: center; margin-bottom: 26px; color: var(--text-sub); font-size: 14px; line-height: 1.8; letter-spacing: 1px; }
+        footer { color: #a7b5b0; font-size: 12.5px; margin-top: auto; padding: 16px 0; letter-spacing: 1px; }
+        @media (max-width: 600px) {
+            body { padding: 16px 12px; }
+            header { font-size: 17px; letter-spacing: 4px; }
+            main { padding: 26px 22px; border-radius: 14px; }
+            .article-title { font-size: 22px; }
+            .article-content { font-size: 15.5px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <span>Q 的网站</span>
+        <a id="accountBtn" class="account-btn" href="../login.html">登录</a>
+    </header>
+    <main>
+        <a href="../article.html" class="back-btn">← 返回文章广场</a>
+        <h1 class="article-title"><span class="qttf">共有知识与公共知识</span></h1>
+        <div class="article-meta">撰写日期：2026-11-16 · 分类：随笔 · 作者：gaji</div>
+        <div class="article-content">
+            <p>在人生三万天中，有人或大，有人或小，但无论大小，总充斥着数不清的不公与无力。这些我们无法吃消或抛开的情绪只能由大往小依次递进，这也侧面解释了人越底层怒气越大的原因。<br><br>我们总是想闭上嘴，默默忍受，然后装出一份死侍样高赞上层人，可谁更恨谁心里知道。因为没有人敢迈出反抗上层人这一步，这也是他们最不想看到的。上层人也有更上层的，下层人也有更下层的，难道上层人受更上层的人的气后面对下层人，不会知道下层人也恨自己吗？难道上层人不相当于更上层人的下层人吗？在被施压时我们只能共喊“忍一时风平浪静”吗？<br><br>若你看着你的同级人作像死侍面对上层人，你会觉得他喜欢上层人吗？正如皇帝的新装，群众大喊衣服好看的时候，你会觉得皇帝真穿了衣服吗？因为没有人想当出头鸟，想去被大众嘲笑，觉得“多一事不如少一事”。此时你知道，但你不知道其他人知不知道，这就是共有知识。可世界上总有人忍不下去，总有几只“出头鸟”。当小孩子高喊“皇帝本来就没穿衣服”的时候，人们才不用去阿谀奉承，坦露心声，因为自己不用担责，此时你已经知道了别人也知道，这就是公共知识。但这两种知识哪个更好，我相信是后者，因为只有后者才能真正解决事情本质的问题。若前者多了，高层人便只能陷在一片称赞声中迷失自我。而两者之间存在着一个至关重要的角色，便是“出头鸟”。在实际生活中，“出头鸟”的存在往往是既希望又不希望的。希望在于有一个人能表露出自己的心声，而你只需附和，不希望却在于若你成为了出头鸟，你将承担巨大的责任，忍受数不清的压力。所以人们更偏向于别人来当，可当每个人都这么想，那将一只出头鸟也没有，该忍受的还是要忍，人们便掉入了这世间无处不在的纳什均衡点。虽然不是最优，但他大概率只能这样发生，而我们恰恰缺少的就是在纳什均衡点之外的——“出头鸟”！<br><br>其实我们都知道有句古话曰“枪打出头鸟”，这也是许多人不愿意成为出头鸟的原因。那让我们回到秦朝，那陈胜和吴广，他们是怎么想的？想着不干也是死路一条，反抗也是死路一条，不如反抗，有可能能结束所有人的痛苦。哪怕一群农民也无法抗衡所有，但他们恰恰这么干了，即使失败了，也同样被载入史册。<br><br>人们敢怒不敢言，打着通天算盘却得怨于胆小而无以得现，这是我们所有人都明白的共有知识！            <br><br>            ——共有知识与公共知识</p>
+        </div>
+    </main>
+    <div class="link-container"><span class="qttf">感谢阅读 · Enjoy Reading</span></div>
+    <footer>© 2026 Q 的网站</footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://qaqaeijbozwtlvxgckaz.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_rzCtAhhsB6--u_0U0lNE4w_BgDGUApS";
+        (async function () {
+            const btn = document.getElementById("accountBtn");
+            if (!window.supabase || !btn) return;
+            const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const { data } = await sb.auth.getSession();
+            const user = data.session?.user;
+            if (!user) return;
+            let label = user.email ? user.email.split("@")[0] : "主页";
+            const { data: profile } = await sb.from("profiles").select("nickname").eq("id", user.id).maybeSingle();
+            if (profile && profile.nickname) label = profile.nickname;
+            btn.textContent = label; btn.title = "进入个人主页";
+        })();
+    </script>
+</body>
+</html>
