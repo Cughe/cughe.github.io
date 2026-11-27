@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>名为高等动物的包袱 - Q 的网站</title>
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @font-face { font-family: "iasans"; src: url("../ia-11152edit.ttf") format("truetype"); font-display: swap; }
+        :root {
+            --bg: #f5f9f7; --card: #ffffff; --border: #e4efea;
+            --text: #3b4a45; --text-strong: #24352f; --text-sub: #8fa39c;
+            --accent: #46b39a; --accent-deep: #2e8a76; --accent-soft: #eaf6f2; --code-bg: #f4f8f6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+            background: var(--bg); min-height: 100vh; padding: 24px 16px;
+            display: flex; flex-direction: column; align-items: center; color: var(--text); }
+        .qttf { font-family: "iasans", "Microsoft YaHei", "PingFang SC", sans-serif; }
+        ::selection { background: rgba(70,179,154,0.18); }
+        header { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 600;
+            letter-spacing: 6px; color: var(--text-strong); margin: 26px 0 22px; }
+        header::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+        .account-btn { font-size: 13px; font-weight: 400; letter-spacing: 0; color: #fff; background: var(--accent);
+            text-decoration: none; padding: 6px 16px; border-radius: 999px; margin-left: 14px; transition: all .25s ease; }
+        .account-btn:hover { background: var(--accent-deep); transform: translateY(-1px); }
+        main { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60,110,95,0.06); padding: 40px 44px; width: 100%; max-width: 780px; margin-bottom: 24px; }
+        .back-btn { display: inline-block; color: var(--accent-deep); text-decoration: none; font-size: 14px;
+            margin-bottom: 22px; padding: 6px 14px; border-radius: 999px; transition: all .25s ease; }
+        .back-btn:hover { color: #fff; background: var(--accent); }
+        .article-title { font-size: 26px; color: var(--text-strong); margin-bottom: 12px; font-weight: 700; line-height: 1.5; letter-spacing: .5px; }
+        .article-meta { font-size: 13px; color: var(--text-sub); margin-bottom: 28px; padding-bottom: 16px;
+            border-bottom: 1px dashed var(--border); letter-spacing: .5px; }
+        .article-content { font-size: 16px; line-height: 1.9; color: var(--text); }
+        .article-content p { margin-bottom: 18px; text-align: left; }
+        .link-container { background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60,110,95,0.06); padding: 26px; width: 100%; max-width: 780px;
+            text-align: center; margin-bottom: 26px; color: var(--text-sub); font-size: 14px; line-height: 1.8; letter-spacing: 1px; }
+        footer { color: #a7b5b0; font-size: 12.5px; margin-top: auto; padding: 16px 0; letter-spacing: 1px; }
+        @media (max-width: 600px) {
+            body { padding: 16px 12px; }
+            header { font-size: 17px; letter-spacing: 4px; }
+            main { padding: 26px 22px; border-radius: 14px; }
+            .article-title { font-size: 22px; }
+            .article-content { font-size: 15.5px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <span>Q 的网站</span>
+        <a id="accountBtn" class="account-btn" href="../login.html">登录</a>
+    </header>
+    <main>
+        <a href="../article.html" class="back-btn">← 返回文章广场</a>
+        <h1 class="article-title"><span class="qttf">名为高等动物的包袱</span></h1>
+        <div class="article-meta">撰写日期：2026-11-16 · 分类：时评 · 作者：曾维</div>
+        <div class="article-content">
+            <p>中华人民共和国建国第七十七年九月十八日，于晚二十点，初二零二五级十三班八年级教室的前黑板上，班主任唐倩老师所题之字被不知名学生改动，后经调查，十三班某同学被唐老查出并被要求向全班说明。其间，唐老多次大声发话，并有明显怒意，责令之声不穷，甚至言道“同学们，要不我们不学知识，先学做人！！！”此意虽非诚欲陷广大人民群众（指同学们）于无知无识、无德无纪之中，却俨已将私人之事公布于众，并将个人之怒怒于他人，个人之责责于全班。<br><br>对于此事，余甚有不满：即乃他人之过，为何株连全班？他人无参与该事者又有何过？是久账未算，还是嘴快于脑？久日之账，何时未了；今日之过，不出于班。若责，责始作俑者，则人心大快；责无辜之人，则民生怨恨、人不服于心，况无理不容、道德不忍，本就是不对之事；若气，气肇事者，则合情合理；气发于全班，则众人皆怒、民不信之，况以自之不快祸众人，乃是自私。古人有云：“酒色财气四堵墙，人人皆在里边藏。谁能跳出墙外头，不活百岁寿也长。”气，乃其之一，害人害己。（过分生气以致于发泄到别人）。人孰不怒？人皆怒，此乃常情；然己怒，不应株连无罪者。<br><br>不言对错，唐老固然是为我等着想，然在想甚？无非品学兼优；为何品学兼优？利于成长；为何成长？总归来说，是为了好好活着。即仅为活，何须品学有多优（仅为活着）？放开来讲，若为活乃为贡献，贡献甚？贡献国家，贡献世界；而为何贡献世界？为了人类文明之发展，无惧于外星文明；然此而讲，乃是为了人类之延续。人类为何延续？无非生物之本能——存活。然而，宇宙无人类，会变吗？人类乃宇宙之一粟，如沧海一沙、秦岭一石、丛莽一叶、长文一字，颇小，可视为无。此之一切，有何意义？太阳依旧核聚变，熄时化作白矮星；行星依旧绕恒星，卫星依旧绕行星。宇宙轮回无穷尽，终觉死神才永生。<br><br>人之语言，本无；为交流信息，故生语言。人之道德，本无；为人类更好地活，方生道德。万物之源，乃为生存。人欲活，为何活？乃为自己。即为自己，遵自己之意，行事，乃人存活之常理。即遵自己之意，何需他人搞甚么教育，此实质为教化。说难听点，即强行改变人之本心。人之活，何需他人评判；人之活，何需受甚么伦理约束；人之活，要别人评判，要别人教化甚么！！！人，何曾需要成为高级动物！！！<br><br>——名为高等动物的包袱（原名《高档封面出版社九月二十日电》）</p>
+        </div>
+    </main>
+    <div class="link-container"><span class="qttf">感谢阅读 · Enjoy Reading</span></div>
+    <footer>© 2026 Q 的网站</footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://qaqaeijbozwtlvxgckaz.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_rzCtAhhsB6--u_0U0lNE4w_BgDGUApS";
+        (async function () {
+            const btn = document.getElementById("accountBtn");
+            if (!window.supabase || !btn) return;
+            const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const { data } = await sb.auth.getSession();
+            const user = data.session?.user;
+            if (!user) return;
+            let label = user.email ? user.email.split("@")[0] : "主页";
+            const { data: profile } = await sb.from("profiles").select("nickname").eq("id", user.id).maybeSingle();
+            if (profile && profile.nickname) label = profile.nickname;
+            btn.textContent = label; btn.title = "进入个人主页";
+        })();
+    </script>
+</body>
+</html>
