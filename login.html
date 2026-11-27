@@ -342,6 +342,86 @@
             background: var(--accent-soft);
         }
 
+        /* ========== 私信 ========== */
+        .dm-entry {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            font-family: inherit;
+            font-size: 15px;
+            color: #ffffff;
+            background: var(--accent);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .dm-entry:hover { background: var(--accent-deep); transform: translateY(-1px); }
+        .dm-badge {
+            display: inline-block; min-width: 18px; padding: 1px 6px; margin-left: 6px;
+            font-size: 11px; line-height: 18px; text-align: center;
+            color: #ffffff; background: #e05a4f; border-radius: 999px;
+        }
+
+        .dm-panel {
+            margin-top: 16px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            background: #ffffff;
+        }
+        .dm-head {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; background: var(--accent-soft);
+            border-bottom: 1px solid var(--border);
+        }
+        .dm-head-title { font-size: 15px; font-weight: 600; color: var(--text-strong); }
+        .dm-close {
+            background: none; border: none; color: var(--text-sub);
+            font-size: 22px; line-height: 1; cursor: pointer; padding: 0 4px;
+        }
+        .dm-close:hover { color: var(--accent-deep); }
+        .dm-body { display: flex; min-height: 320px; }
+        .dm-users {
+            width: 40%; max-width: 180px; border-right: 1px solid var(--border);
+            overflow-y: auto; max-height: 400px; background: #fbfdfc;
+        }
+        .dm-user {
+            display: flex; align-items: center; gap: 8px; padding: 11px 12px;
+            cursor: pointer; border-bottom: 1px solid var(--border);
+            transition: background 0.2s ease;
+        }
+        .dm-user:hover { background: var(--accent-soft); }
+        .dm-user.active { background: var(--accent-soft); border-left: 3px solid var(--accent); }
+        .dm-user-name { font-size: 13px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .dm-chat { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+        .dm-messages { flex: 1; overflow-y: auto; max-height: 340px; padding: 14px; }
+        .dm-empty { color: var(--text-sub); font-size: 13px; text-align: center; margin-top: 120px; }
+        .dm-msg { margin-bottom: 12px; display: flex; }
+        .dm-msg.mine { justify-content: flex-end; }
+        .dm-bubble {
+            max-width: 78%; padding: 8px 12px; border-radius: 14px;
+            font-size: 13.5px; line-height: 1.6; word-break: break-word; white-space: pre-wrap;
+            background: #f0f4f2; color: var(--text); border-bottom-left-radius: 4px;
+        }
+        .dm-msg.mine .dm-bubble {
+            background: var(--accent); color: #ffffff; border-radius: 14px; border-bottom-right-radius: 4px;
+        }
+        .dm-time { display: block; font-size: 10.5px; opacity: 0.65; margin-top: 3px; }
+        .dm-compose { display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--border); }
+        .dm-compose input {
+            flex: 1; min-width: 0; padding: 9px 12px; font-size: 13px; font-family: inherit;
+            border: 1px solid var(--border); border-radius: 999px; outline: none; background: var(--bg);
+        }
+        .dm-compose input:focus { border-color: var(--accent); }
+        .dm-send {
+            padding: 8px 16px; font-size: 13px; color: #fff; background: var(--accent);
+            border: none; border-radius: 999px; cursor: pointer; transition: background 0.2s ease;
+        }
+        .dm-send:hover { background: var(--accent-deep); }
+        .dm-send:disabled { opacity: 0.5; cursor: not-allowed; }
+        .dm-tip { font-size: 12px; color: var(--text-sub); padding: 6px 16px 12px; }
+
         .hidden {
             display: none !important;
         }
@@ -436,7 +516,29 @@
                 </div>
                 <p id="profileMsg" class="msg" role="status"></p>
                 <button type="button" id="saveBtn" class="btn-primary">保存资料</button>
+                <button type="button" id="dmEntry" class="dm-entry">私信<span id="dmBadge" class="dm-badge hidden">0</span></button>
                 <button type="button" id="logoutBtn" class="btn-secondary">退出登录</button>
+
+                <!-- 私信面板 -->
+                <div class="dm-panel hidden" id="dmPanel">
+                    <div class="dm-head">
+                        <span class="dm-head-title">私信</span>
+                        <button type="button" class="dm-close" id="dmClose" title="收起">×</button>
+                    </div>
+                    <div class="dm-body">
+                        <div class="dm-users" id="dmUsers"></div>
+                        <div class="dm-chat">
+                            <div class="dm-messages" id="dmMessages">
+                                <div class="dm-empty" id="dmEmpty">从左侧选择一位用户开始对话</div>
+                            </div>
+                            <div class="dm-compose hidden" id="dmCompose">
+                                <input id="dmInput" type="text" placeholder="输入消息…" maxlength="1000">
+                                <button type="button" class="dm-send" id="dmSend">发送</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dm-tip">仅你与对方可见</div>
+                </div>
             </div>
         </div>
     </main>
@@ -480,6 +582,168 @@
 
         let mode = "login";
         let currentUser = null;
+
+        // ========== 私信 ==========
+        const dmEntry = document.getElementById("dmEntry");
+        const dmBadge = document.getElementById("dmBadge");
+        const dmPanel = document.getElementById("dmPanel");
+        const dmClose = document.getElementById("dmClose");
+        const dmUsers = document.getElementById("dmUsers");
+        const dmMessages = document.getElementById("dmMessages");
+        const dmEmpty = document.getElementById("dmEmpty");
+        const dmCompose = document.getElementById("dmCompose");
+        const dmInput = document.getElementById("dmInput");
+        const dmSend = document.getElementById("dmSend");
+
+        let dmPeer = null;          // 当前对话对象 {id, nickname, email}
+        let dmChannel = null;       // Supabase Realtime 频道
+        let dmUsersLoaded = false;
+
+        function dmName(p) {
+            return (p && p.nickname) || (p && p.email ? p.email.split("@")[0] : "用户");
+        }
+
+        // 拉取未读私信数（发给当前用户且未读）
+        async function dmRefreshBadge() {
+            if (!sb || !currentUser) return;
+            const { count, error } = await sb
+                .from("messages")
+                .select("id", { count: "exact", head: true })
+                .eq("receiver_id", currentUser.id)
+                .eq("read", false);
+            if (error) return;
+            if (count > 0) {
+                dmBadge.textContent = count > 99 ? "99+" : String(count);
+                dmBadge.classList.remove("hidden");
+            } else {
+                dmBadge.classList.add("hidden");
+            }
+        }
+
+        // 加载用户列表（排除自己），显示昵称
+        async function dmLoadUsers() {
+            if (!sb || !currentUser || dmUsersLoaded) return;
+            dmUsers.innerHTML = '<div class="dm-tip" style="padding:14px">加载中…</div>';
+            const { data: profiles, error } = await sb
+                .from("profiles")
+                .select("id, nickname, avatar_url")
+                .neq("id", currentUser.id)
+                .order("nickname", { ascending: true });
+            if (error) {
+                dmUsers.innerHTML = '<div class="dm-tip" style="padding:14px">用户列表加载失败：' + error.message + '</div>';
+                return;
+            }
+            dmUsersLoaded = true;
+            dmUsers.innerHTML = "";
+            if (!profiles || !profiles.length) {
+                dmUsers.innerHTML = '<div class="dm-tip" style="padding:14px">还没有其他用户</div>';
+                return;
+            }
+            profiles.forEach(p => {
+                const div = document.createElement("div");
+                div.className = "dm-user";
+                div.dataset.id = p.id;
+                const initial = (p.nickname || "U").charAt(0).toUpperCase();
+                div.innerHTML = '<span class="avatar" style="width:30px;height:30px;font-size:13px;margin:0;flex:0 0 30px">' +
+                    (p.avatar_url ? '<img src="' + p.avatar_url.replace(/"/g, "&quot;") + '" alt="">' : initial) + '</span>' +
+                    '<span class="dm-user-name">' + dmName(p).replace(/</g, "&lt;") + '</span>';
+                div.addEventListener("click", () => dmOpenChat({ id: p.id, nickname: p.nickname, email: null }));
+                dmUsers.appendChild(div);
+            });
+        }
+
+        // 打开与某人的对话
+        async function dmOpenChat(peer) {
+            dmPeer = peer;
+            dmUsers.querySelectorAll(".dm-user").forEach(u => u.classList.toggle("active", u.dataset.id === peer.id));
+            dmCompose.classList.remove("hidden");
+            dmEmpty.classList.add("hidden");
+            await dmLoadMessages();
+            // 标记对方发来的消息为已读
+            await sb.from("messages")
+                .update({ read: true })
+                .eq("sender_id", peer.id)
+                .eq("receiver_id", currentUser.id)
+                .eq("read", false);
+            dmRefreshBadge();
+        }
+
+        // 加载与当前对象的聊天记录
+        async function dmLoadMessages() {
+            if (!sb || !currentUser || !dmPeer) return;
+            const { data, error } = await sb
+                .from("messages")
+                .select("id, sender_id, receiver_id, content, created_at")
+                .or("and(sender_id.eq." + currentUser.id + ",receiver_id.eq." + dmPeer.id + "),and(sender_id.eq." + dmPeer.id + ",receiver_id.eq." + currentUser.id + ")")
+                .order("created_at", { ascending: true });
+            if (error) {
+                dmMessages.innerHTML = '<div class="dm-empty">消息加载失败：' + error.message + '</div>';
+                return;
+            }
+            dmMessages.innerHTML = "";
+            if (!data || !data.length) {
+                dmMessages.innerHTML = '<div class="dm-empty">还没有消息，打个招呼吧</div>';
+                return;
+            }
+            data.forEach(m => {
+                const mine = m.sender_id === currentUser.id;
+                const div = document.createElement("div");
+                div.className = "dm-msg" + (mine ? " mine" : "");
+                const time = (m.created_at || "").slice(5, 16).replace("T", " ");
+                div.innerHTML = '<div class="dm-bubble">' + String(m.content).replace(/</g, "&lt;").replace(/>/g, "&gt;") +
+                    '<span class="dm-time">' + time + '</span></div>';
+                dmMessages.appendChild(div);
+            });
+            dmMessages.scrollTop = dmMessages.scrollHeight;
+        }
+
+        // 订阅实时消息
+        function dmSubscribe() {
+            if (!sb || !currentUser || dmChannel) return;
+            dmChannel = sb.channel("dm-" + currentUser.id)
+                .on("postgres_changes", {
+                    event: "INSERT", schema: "public", table: "messages",
+                    filter: "receiver_id=eq." + currentUser.id
+                }, payload => {
+                    dmRefreshBadge();
+                    if (dmPeer && payload.new.sender_id === dmPeer.id) dmLoadMessages();
+                })
+                .subscribe();
+        }
+
+        // 打开 / 收起私信面板
+        dmEntry.addEventListener("click", async () => {
+            const willOpen = dmPanel.classList.contains("hidden");
+            dmPanel.classList.toggle("hidden", !willOpen);
+            if (willOpen) {
+                await dmLoadUsers();
+                dmSubscribe();
+                dmRefreshBadge();
+            }
+        });
+        dmClose.addEventListener("click", () => dmPanel.classList.add("hidden"));
+
+        // 发送消息
+        dmSend.addEventListener("click", async () => {
+            if (!sb || !currentUser || !dmPeer) return;
+            const text = dmInput.value.trim();
+            if (!text) return;
+            dmSend.disabled = true;
+            const { error } = await sb.from("messages").insert({
+                sender_id: currentUser.id,
+                receiver_id: dmPeer.id,
+                content: text,
+                read: false
+            });
+            dmSend.disabled = false;
+            if (error) {
+                dmInput.placeholder = "发送失败：" + error.message;
+                return;
+            }
+            dmInput.value = "";
+            dmLoadMessages();
+        });
+        dmInput.addEventListener("keydown", e => { if (e.key === "Enter") dmSend.click(); });
 
         function setProfileMsg(text, type) {
             profileMsgEl.textContent = text || "";
@@ -573,9 +837,15 @@
                 userEmailEl.textContent = user.email || "已登录用户";
                 userIdEl.textContent = "ID: " + user.id;
                 loadProfile(user);
+                dmPanel.classList.add("hidden");
+                dmUsersLoaded = false;
+                dmRefreshBadge();
+                dmSubscribe();
             } else {
                 authView.classList.remove("hidden");
                 userView.classList.add("hidden");
+                if (dmChannel) { if (sb) sb.removeChannel(dmChannel); dmChannel = null; }
+                dmPeer = null;
             }
         }
 
