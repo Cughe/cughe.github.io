@@ -324,11 +324,14 @@
         }
 
         .btn-secondary {
+            display: block;
             width: 100%;
             padding: 12px;
             margin-top: 10px;
             font-family: inherit;
             font-size: 15px;
+            text-align: center;
+            text-decoration: none;
             color: var(--accent-deep);
             background: transparent;
             border: 1px solid var(--border);
@@ -502,20 +505,7 @@
             </div>
 
             <div class="profile-form">
-                <div class="field">
-                    <label for="nickname">昵称</label>
-                    <input id="nickname" type="text" placeholder="给自己起个名字" maxlength="40">
-                </div>
-                <div class="field">
-                    <label for="avatarUrl">头像链接</label>
-                    <input id="avatarUrl" type="url" placeholder="https://...（图片地址）">
-                </div>
-                <div class="field">
-                    <label for="bio">个性签名</label>
-                    <textarea id="bio" rows="3" placeholder="写点什么介绍自己" maxlength="200"></textarea>
-                </div>
-                <p id="profileMsg" class="msg" role="status"></p>
-                <button type="button" id="saveBtn" class="btn-primary">保存资料</button>
+                <a href="profile.html" class="btn-secondary">修改资料</a>
                 <button type="button" id="dmEntry" class="dm-entry">私信<span id="dmBadge" class="dm-badge hidden">0</span></button>
                 <button type="button" id="logoutBtn" class="btn-secondary">退出登录</button>
 
@@ -574,11 +564,6 @@
         const userEmailEl = document.getElementById("userEmail");
         const userIdEl = document.getElementById("userId");
         const avatarEl = document.getElementById("avatar");
-        const nicknameEl = document.getElementById("nickname");
-        const avatarUrlEl = document.getElementById("avatarUrl");
-        const bioEl = document.getElementById("bio");
-        const profileMsgEl = document.getElementById("profileMsg");
-        const saveBtn = document.getElementById("saveBtn");
 
         let mode = "login";
         let currentUser = null;
@@ -745,31 +730,15 @@
         });
         dmInput.addEventListener("keydown", e => { if (e.key === "Enter") dmSend.click(); });
 
-        function setProfileMsg(text, type) {
-            profileMsgEl.textContent = text || "";
-            profileMsgEl.className = "msg" + (type ? " " + type : "");
-        }
-
-        // 拉取当前用户的个人资料
+        // 拉取当前用户的资料用于头像显示（编辑已移到 profile.html）
         async function loadProfile(user) {
             if (!sb || !user) return;
-            nicknameEl.value = "";
-            avatarUrlEl.value = "";
-            bioEl.value = "";
-            setProfileMsg("");
-            const { data, error } = await sb
+            const { data } = await sb
                 .from("profiles")
-                .select("nickname, avatar_url, bio")
+                .select("nickname, avatar_url")
                 .eq("id", user.id)
                 .maybeSingle();
-            if (error) {
-                setProfileMsg("资料读取失败：" + error.message, "error");
-                return;
-            }
             if (data) {
-                nicknameEl.value = data.nickname || "";
-                avatarUrlEl.value = data.avatar_url || "";
-                bioEl.value = data.bio || "";
                 updateAvatar(data.avatar_url, data.nickname, user.email);
             } else {
                 avatarEl.textContent = (user.email || "Q").charAt(0).toUpperCase();
@@ -789,29 +758,6 @@
                 avatarEl.textContent = (nickname || email || "Q").charAt(0).toUpperCase();
             }
         }
-
-        // 保存个人资料（upsert：有则更新，无则插入）
-        saveBtn.addEventListener("click", async () => {
-            if (!sb || !currentUser) return;
-            setProfileMsg("");
-            saveBtn.disabled = true;
-            try {
-                const { error } = await sb.from("profiles").upsert({
-                    id: currentUser.id,
-                    nickname: nicknameEl.value.trim(),
-                    avatar_url: avatarUrlEl.value.trim(),
-                    bio: bioEl.value.trim(),
-                    updated_at: new Date().toISOString()
-                });
-                if (error) throw error;
-                updateAvatar(avatarUrlEl.value.trim(), nicknameEl.value.trim(), currentUser.email);
-                setProfileMsg("资料已保存", "success");
-            } catch (err) {
-                setProfileMsg(err.message || "保存失败，请稍后重试", "error");
-            } finally {
-                saveBtn.disabled = false;
-            }
-        });
 
         function setMsg(text, type) {
             msgEl.textContent = text || "";
