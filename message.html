@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" href="https://cdn.luogu.com.cn/upload/image_hosting/5bhl3tn0.png" type="image/png" sizes="32x32">
+    <meta charset="utf-8">
+    <title>私信 - Q 的网站</title>
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* ========== 本地字体（仅 class="qttf" 使用） ========== */
+        @font-face {
+            font-family: "iasans";
+            src: url("ia-11152edit.ttf") format("truetype");
+            font-display: swap;
+        }
+
+        :root {
+            --bg: #f5f9f7;
+            --card: #ffffff;
+            --border: #e4efea;
+            --text: #3b4a45;
+            --text-strong: #24352f;
+            --text-sub: #8fa39c;
+            --accent: #46b39a;
+            --accent-deep: #2e8a76;
+            --accent-soft: #eaf6f2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text);
+        }
+
+        .qttf { font-family: "iasans", "Microsoft YaHei", "PingFang SC", sans-serif; }
+        ::selection { background: rgba(70, 179, 154, 0.18); }
+
+        header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 780px;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: var(--text-strong);
+            margin: 26px 0 22px;
+        }
+        header::before {
+            content: "";
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+        .account-btn {
+            margin-left: auto;
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 0;
+            color: #ffffff;
+            background: var(--accent);
+            text-decoration: none;
+            padding: 6px 16px;
+            border-radius: 999px;
+            transition: all 0.25s ease;
+        }
+        .account-btn:hover { background: var(--accent-deep); transform: translateY(-1px); }
+
+        main {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60, 110, 95, 0.06);
+            padding: 40px 44px 44px;
+            width: 100%;
+            max-width: 780px;
+            margin-bottom: 24px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            color: var(--accent-deep);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 22px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            transition: all 0.25s ease;
+        }
+        .back-btn:hover { color: #fff; background: var(--accent); }
+
+        .doc-title {
+            font-size: 30px;
+            color: var(--text-strong);
+            font-weight: 700;
+            line-height: 1.4;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .doc-subtitle {
+            font-size: 15px;
+            color: var(--text-sub);
+            line-height: 1.7;
+            text-align: center;
+            margin-bottom: 26px;
+        }
+        .divider { width: 48px; height: 1px; background: var(--border); margin: 0 auto 28px; }
+
+        .auth-box { max-width: 640px; margin: 0 auto; }
+
+        /* ========== 私信 ========== */
+        .dm-search {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .dm-search input {
+            flex: 1; min-width: 0;
+            padding: 10px 14px;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            outline: none;
+            background: var(--bg);
+            transition: all 0.25s ease;
+        }
+        .dm-search input:focus { border-color: var(--accent); background: #fff; }
+        .dm-search-clear {
+            padding: 0 14px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--accent-deep);
+            background: var(--accent-soft);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .dm-search-clear:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+        .dm-panel {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            background: #ffffff;
+        }
+        .dm-head {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; background: var(--accent-soft);
+            border-bottom: 1px solid var(--border);
+        }
+        .dm-head-title { font-size: 15px; font-weight: 600; color: var(--text-strong); }
+        .dm-close {
+            background: none; border: none; color: var(--text-sub);
+            font-size: 22px; line-height: 1; cursor: pointer; padding: 0 4px;
+        }
+        .dm-close:hover { color: var(--accent-deep); }
+        .dm-body { display: flex; min-height: 440px; }
+        .dm-users {
+            width: 40%; max-width: 240px; border-right: 1px solid var(--border);
+            overflow-y: auto; max-height: 520px; background: #fbfdfc;
+        }
+        .dm-user {
+            display: flex; align-items: center; gap: 8px; padding: 11px 12px;
+            cursor: pointer; border-bottom: 1px solid var(--border);
+            transition: background 0.2s ease;
+            overflow: hidden;
+        }
+        .dm-user:hover { background: var(--accent-soft); }
+        .dm-user.active { background: var(--accent-soft); border-left: 3px solid var(--accent); }
+        .dm-user-info { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+        .dm-user-name { font-size: 13px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .dm-user-email { font-size: 11px; color: var(--text-sub); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .dm-chat { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+        .dm-messages { flex: 1; overflow-y: auto; max-height: 460px; padding: 14px; }
+        .dm-empty { color: var(--text-sub); font-size: 13px; text-align: center; margin-top: 160px; }
+        .dm-msg { margin-bottom: 12px; display: flex; }
+        .dm-msg.mine { justify-content: flex-end; }
+        .dm-bubble {
+            max-width: 78%; padding: 8px 12px; border-radius: 14px;
+            font-size: 13.5px; line-height: 1.6; word-break: break-word; white-space: pre-wrap;
+            background: #f0f4f2; color: var(--text); border-bottom-left-radius: 4px;
+        }
+        .dm-msg.mine .dm-bubble {
+            background: var(--accent); color: #ffffff; border-radius: 14px; border-bottom-right-radius: 4px;
+        }
+        .dm-time { display: block; font-size: 10.5px; opacity: 0.65; margin-top: 3px; }
+        .dm-compose { display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--border); }
+        .dm-compose input {
+            flex: 1; min-width: 0; padding: 9px 12px; font-size: 13px; font-family: inherit;
+            border: 1px solid var(--border); border-radius: 999px; outline: none; background: var(--bg);
+        }
+        .dm-compose input:focus { border-color: var(--accent); }
+        .dm-send {
+            padding: 8px 16px; font-size: 13px; color: #fff; background: var(--accent);
+            border: none; border-radius: 999px; cursor: pointer; transition: background 0.2s ease;
+        }
+        .dm-send:hover { background: var(--accent-deep); }
+        .dm-send:disabled { opacity: 0.5; cursor: not-allowed; }
+        .dm-tip { font-size: 12px; color: var(--text-sub); padding: 6px 16px 12px; }
+
+        .hidden { display: none !important; }
+
+        footer { color: #a7b5b0; font-size: 12.5px; margin-top: auto; padding: 16px 0; letter-spacing: 1px; }
+
+        @media (max-width: 600px) {
+            body { padding: 16px 12px; }
+            header { font-size: 17px; letter-spacing: 4px; }
+            main { padding: 26px 18px; border-radius: 14px; }
+            .doc-title { font-size: 25px; }
+            .dm-body { flex-direction: column; min-height: 0; }
+            .dm-users { width: 100%; max-width: none; max-height: 180px; border-right: none; border-bottom: 1px solid var(--border); }
+            .dm-messages { max-height: 320px; }
+            .dm-empty { margin-top: 90px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <span>Q 的网站</span>
+        <a id="accountBtn" class="account-btn" href="login.html">个人中心</a>
+    </header>
+
+    <main>
+        <a href="/" class="back-btn">← 返回首页</a>
+        <h1 class="doc-title"><span class="qttf">私信</span></h1>
+        <p class="doc-subtitle" id="docSubtitle">与他人私信交流</p>
+        <div class="divider"></div>
+
+        <!-- 未登录提示 -->
+        <div class="auth-box" id="guestView">
+            <p class="doc-subtitle">请先登录后再使用私信</p>
+            <a href="login.html" class="btn-secondary" style="display:block;text-align:center;text-decoration:none;padding:12px;border:1px solid var(--border);border-radius:10px;color:var(--accent-deep)">前往登录</a>
+        </div>
+
+        <!-- 已登录：私信 -->
+        <div class="auth-box hidden" id="boxView">
+            <div class="dm-search">
+                <input id="dmSearch" type="text" placeholder="搜索昵称或邮箱…" autocomplete="off">
+                <button type="button" id="dmSearchClear" class="dm-search-clear">清除</button>
+            </div>
+            <div class="dm-panel">
+                <div class="dm-head">
+                    <span class="dm-head-title">私信</span>
+                    <span class="dm-tip" style="padding:0">仅你与对方可见</span>
+                </div>
+                <div class="dm-body">
+                    <div class="dm-users" id="dmUsers"></div>
+                    <div class="dm-chat">
+                        <div class="dm-messages" id="dmMessages">
+                            <div class="dm-empty" id="dmEmpty">从左侧选择一位用户开始对话</div>
+                        </div>
+                        <div class="dm-compose hidden" id="dmCompose">
+                            <input id="dmInput" type="text" placeholder="输入消息…" maxlength="1000">
+                            <button type="button" class="dm-send" id="dmSend">发送</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>© 2026 Q 的网站</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://qaqaeijbozwtlvxgckaz.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_rzCtAhhsB6--u_0U0lNE4w_BgDGUApS";
+
+        const guestView = document.getElementById("guestView");
+        const boxView = document.getElementById("boxView");
+        const accountBtn = document.getElementById("accountBtn");
+        const dmSearch = document.getElementById("dmSearch");
+        const dmSearchClear = document.getElementById("dmSearchClear");
+        const dmUsers = document.getElementById("dmUsers");
+        const dmMessages = document.getElementById("dmMessages");
+        const dmEmpty = document.getElementById("dmEmpty");
+        const dmCompose = document.getElementById("dmCompose");
+        const dmInput = document.getElementById("dmInput");
+        const dmSend = document.getElementById("dmSend");
+
+        let sb = null;
+        let currentUser = null;
+        let dmPeer = null;
+        let dmChannel = null;
+        if (window.supabase) {
+            sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        function dmName(p) {
+            return (p && p.nickname) || (p && p.email ? p.email.split("@")[0] : "用户");
+        }
+
+        // 加载用户列表（支持按昵称/邮箱搜索）
+        async function dmLoadUsers(keyword) {
+            if (!sb || !currentUser) return;
+            const q = (keyword || "").trim();
+            dmUsers.innerHTML = '<div class="dm-tip" style="padding:14px">加载中…</div>';
+            let list = [], err = null;
+            // 优先用搜索函数（昵称+邮箱）
+            const { data, error } = await sb.rpc("search_users", { q: q });
+            if (!error) {
+                list = data || [];
+            } else {
+                // 回退：只查 profiles 的昵称（未执行 supabase-search.sql 时）
+                let query = sb.from("profiles").select("id, nickname, avatar_url").neq("id", currentUser.id);
+                if (q) query = query.ilike("nickname", "%" + q + "%");
+                const res = await query.order("nickname", { ascending: true }).limit(50);
+                list = res.data || [];
+                err = res.error;
+            }
+            if (err) {
+                dmUsers.innerHTML = '<div class="dm-tip" style="padding:14px">用户列表加载失败：' + err.message + '</div>';
+                return;
+            }
+            dmUsers.innerHTML = "";
+            if (!list.length) {
+                dmUsers.innerHTML = '<div class="dm-tip" style="padding:14px">' + (q ? "没有匹配的用户" : "还没有其他用户") + '</div>';
+                return;
+            }
+            list.forEach(p => {
+                const div = document.createElement("div");
+                div.className = "dm-user" + (dmPeer && dmPeer.id === p.id ? " active" : "");
+                div.dataset.id = p.id;
+                const initial = dmName(p).charAt(0).toUpperCase();
+                const avatar = p.avatar_url
+                    ? '<img src="' + p.avatar_url.replace(/"/g, "&quot;") + '" alt="">'
+                    : initial;
+                div.innerHTML = '<span class="avatar" style="width:32px;height:32px;font-size:13px;margin:0;flex:0 0 32px">' + avatar + '</span>' +
+                    '<span class="dm-user-info">' +
+                    '<span class="dm-user-name">' + dmName(p).replace(/</g, "&lt;") + '</span>' +
+                    (p.email ? '<span class="dm-user-email">' + p.email.replace(/</g, "&lt;") + '</span>' : '') +
+                    '</span>';
+                div.addEventListener("click", () => dmOpenChat({ id: p.id, nickname: p.nickname, email: p.email }));
+                dmUsers.appendChild(div);
+            });
+        }
+
+        // 打开与某人的对话
+        async function dmOpenChat(peer) {
+            dmPeer = peer;
+            dmUsers.querySelectorAll(".dm-user").forEach(u => u.classList.toggle("active", u.dataset.id === peer.id));
+            dmCompose.classList.remove("hidden");
+            dmEmpty.classList.add("hidden");
+            dmMessages.innerHTML = "";
+            await dmLoadMessages();
+            // 标记对方发来的消息为已读
+            await sb.from("messages")
+                .update({ read: true })
+                .eq("sender_id", peer.id)
+                .eq("receiver_id", currentUser.id)
+                .eq("read", false);
+        }
+
+        // 加载与当前对象的聊天记录
+        async function dmLoadMessages() {
+            if (!sb || !currentUser || !dmPeer) return;
+            const { data, error } = await sb
+                .from("messages")
+                .select("id, sender_id, receiver_id, content, created_at")
+                .or("and(sender_id.eq." + currentUser.id + ",receiver_id.eq." + dmPeer.id + "),and(sender_id.eq." + dmPeer.id + ",receiver_id.eq." + currentUser.id + ")")
+                .order("created_at", { ascending: true });
+            if (error) {
+                dmMessages.innerHTML = '<div class="dm-empty">消息加载失败：' + error.message + '</div>';
+                return;
+            }
+            dmMessages.innerHTML = "";
+            if (!data || !data.length) {
+                dmMessages.innerHTML = '<div class="dm-empty">还没有消息，打个招呼吧</div>';
+                return;
+            }
+            data.forEach(m => {
+                const mine = m.sender_id === currentUser.id;
+                const div = document.createElement("div");
+                div.className = "dm-msg" + (mine ? " mine" : "");
+                const time = (m.created_at || "").slice(5, 16).replace("T", " ");
+                div.innerHTML = '<div class="dm-bubble">' + String(m.content).replace(/</g, "&lt;").replace(/>/g, "&gt;") +
+                    '<span class="dm-time">' + time + '</span></div>';
+                dmMessages.appendChild(div);
+            });
+            dmMessages.scrollTop = dmMessages.scrollHeight;
+        }
+
+        // 订阅实时消息
+        function dmSubscribe() {
+            if (!sb || !currentUser || dmChannel) return;
+            dmChannel = sb.channel("dm-page-" + currentUser.id)
+                .on("postgres_changes", {
+                    event: "INSERT", schema: "public", table: "messages",
+                    filter: "receiver_id=eq." + currentUser.id
+                }, payload => {
+                    if (dmPeer && payload.new.sender_id === dmPeer.id) dmLoadMessages();
+                })
+                .subscribe();
+        }
+
+        // 发送消息
+        dmSend.addEventListener("click", async () => {
+            if (!sb || !currentUser || !dmPeer) return;
+            const text = dmInput.value.trim();
+            if (!text) return;
+            dmSend.disabled = true;
+            const { error } = await sb.from("messages").insert({
+                sender_id: currentUser.id,
+                receiver_id: dmPeer.id,
+                content: text,
+                read: false
+            });
+            dmSend.disabled = false;
+            if (error) {
+                dmInput.placeholder = "发送失败：" + error.message;
+                return;
+            }
+            dmInput.value = "";
+            dmLoadMessages();
+        });
+        dmInput.addEventListener("keydown", e => { if (e.key === "Enter") dmSend.click(); });
+
+        // 搜索（输入即搜，轻微防抖）
+        let searchTimer = null;
+        dmSearch.addEventListener("input", () => {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => dmLoadUsers(dmSearch.value), 250);
+        });
+        dmSearchClear.addEventListener("click", () => {
+            dmSearch.value = "";
+            dmLoadUsers("");
+            dmSearch.focus();
+        });
+
+        (async function init() {
+            if (!sb) return;
+            const { data } = await sb.auth.getSession();
+            const user = data.session && data.session.user;
+            if (!user) {
+                guestView.classList.remove("hidden");
+                boxView.classList.add("hidden");
+                return;
+            }
+            currentUser = user;
+            guestView.classList.add("hidden");
+            boxView.classList.remove("hidden");
+            if (user.email) accountBtn.textContent = user.email.split("@")[0];
+            await dmLoadUsers("");
+            dmSubscribe();
+
+            // 支持 ?to=<用户id> 直接从别处跳转打开对话
+            const params = new URLSearchParams(location.search);
+            const to = params.get("to");
+            if (to && to !== user.id) {
+                const { data: p } = await sb.from("profiles").select("nickname, avatar_url").eq("id", to).maybeSingle();
+                dmOpenChat({ id: to, nickname: p ? p.nickname : null, email: null });
+            }
+        })();
+    </script>
+</body>
+</html>
