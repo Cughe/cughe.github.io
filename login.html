@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" href="https://cdn.luogu.com.cn/upload/image_hosting/5bhl3tn0.png" type="image/png" sizes="32x32">
+    <meta charset="utf-8">
+    <title>登录</title>
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* ========== 本地字体引入（与本文件同目录） ========== */
+        /* 字体只应用于 class="qttf" 的 div，用法：<div class="qttf">文字</div> */
+        @font-face {
+            font-family: "iasans";
+            src: url("ia-11152edit.ttf") format("truetype");
+            font-display: swap;
+        }
+
+        /* ========== 主题变量：清新简约（与整站一致） ========== */
+        :root {
+            --bg: #f5f9f7;
+            --card: #ffffff;
+            --border: #e4efea;
+            --text: #3b4a45;
+            --text-strong: #24352f;
+            --text-sub: #8fa39c;
+            --accent: #46b39a;
+            --accent-deep: #2e8a76;
+            --accent-soft: #eaf6f2;
+        }
+
+        /* ========== 全局重置与基础配置 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text);
+        }
+
+        /* 自定义 TTF 字体：只通过 <div class="qttf"> 使用，不全局套用 */
+        .qttf {
+            font-family: "iasans", "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        ::selection {
+            background: rgba(70, 179, 154, 0.18);
+        }
+
+        /* ========== 站点头部 ========== */
+        header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: var(--text-strong);
+            margin: 26px 0 22px;
+        }
+
+        header::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* ========== 主体卡片 ========== */
+        main {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(60, 110, 95, 0.06);
+            padding: 40px 44px 44px;
+            width: 100%;
+            max-width: 780px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        /* ========== 返回首页按钮（胶囊形） ========== */
+        .back-btn {
+            display: inline-block;
+            color: var(--accent-deep);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 22px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            transition: all 0.25s ease;
+        }
+
+        .back-btn:hover {
+            color: #ffffff;
+            background: var(--accent);
+        }
+
+        /* ========== 大标题 / 副标题 ========== */
+        .doc-title {
+            font-size: 30px;
+            color: var(--text-strong);
+            font-weight: 700;
+            line-height: 1.4;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .doc-subtitle {
+            font-size: 15px;
+            color: var(--text-sub);
+            line-height: 1.7;
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        .divider {
+            width: 48px;
+            height: 1px;
+            background: var(--border);
+            margin: 0 auto 28px;
+        }
+
+        /* ========== 表单容器（居中收窄） ========== */
+        .auth-box {
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        /* 登录 / 注册切换 */
+        .tabs {
+            display: flex;
+            gap: 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 26px;
+        }
+
+        .tab {
+            font-family: inherit;
+            font-size: 15px;
+            color: var(--text-sub);
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 10px 4px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .tab:hover {
+            color: var(--accent-deep);
+        }
+
+        .tab.active {
+            color: var(--accent-deep);
+            border-bottom-color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* 输入项 */
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 15px;
+            font-family: inherit;
+            color: var(--text);
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .field input:focus {
+            border-color: var(--accent);
+            background: #ffffff;
+        }
+
+        /* 主按钮 */
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 15px;
+            color: #ffffff;
+            background: var(--accent);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-deep);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* 次要链接按钮 */
+        .btn-link {
+            display: block;
+            margin: 18px auto 0;
+            font-family: inherit;
+            font-size: 13px;
+            color: var(--accent-deep);
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(70, 179, 154, 0.4);
+            padding-bottom: 2px;
+        }
+
+        .btn-link:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* 提示信息 */
+        .msg {
+            min-height: 20px;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 2px 0 14px;
+            color: var(--text-sub);
+        }
+
+        .msg.error {
+            color: #c0392b;
+        }
+
+        .msg.success {
+            color: var(--accent-deep);
+        }
+
+        /* ========== 已登录视图 ========== */
+        .user-card {
+            text-align: center;
+            padding: 6px 0 26px;
+        }
+
+        .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--accent-soft);
+            color: var(--accent-deep);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0 auto 14px;
+        }
+
+        .user-email {
+            font-size: 16px;
+            color: var(--text-strong);
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .user-id {
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-top: 6px;
+            word-break: break-all;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ========== 页脚 ========== */
+        footer {
+            color: #a7b5b0;
+            font-size: 12.5px;
+            margin-top: auto;
+            padding: 16px 0;
+            letter-spacing: 1px;
+        }
+
+        /* ========== 移动端适配 ========== */
+        @media (max-width: 600px) {
+            body {
+                padding: 16px 12px;
+            }
+
+            header {
+                font-size: 17px;
+                letter-spacing: 4px;
+            }
+
+            main {
+                padding: 30px 22px 34px;
+                border-radius: 14px;
+            }
+
+            .doc-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 站点头部（可自行修改站点名） -->
+    <header>Q 的网站</header>
+
+    <main>
+        <!-- 返回首页 -->
+        <a href="/" class="back-btn">← 返回首页</a>
+
+        <h1 class="doc-title">登录</h1>
+        <p class="doc-subtitle">用邮箱登录，管理你的专属内容</p>
+
+        <div class="divider"></div>
+
+        <!-- 未登录：登录 / 注册表单 -->
+        <div class="auth-box" id="authView">
+            <div class="tabs">
+                <button type="button" class="tab active" data-mode="login">登录</button>
+                <button type="button" class="tab" data-mode="register">注册</button>
+            </div>
+
+            <form id="authForm">
+                <div class="field">
+                    <label for="email">邮箱</label>
+                    <input id="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+                </div>
+                <div class="field">
+                    <label for="password">密码</label>
+                    <input id="password" type="password" placeholder="至少 6 位" autocomplete="current-password" required>
+                </div>
+                <p id="msg" class="msg" role="status"></p>
+                <button type="submit" id="submitBtn" class="btn-primary">登录</button>
+            </form>
+
+            <button type="button" id="otpBtn" class="btn-link">用邮件验证码登录（免密码）</button>
+        </div>
+
+        <!-- 已登录：用户信息 -->
+        <div class="auth-box hidden" id="userView">
+            <div class="user-card">
+                <div class="avatar" id="avatar">Q</div>
+                <p class="user-email" id="userEmail"></p>
+                <p class="user-id" id="userId"></p>
+            </div>
+            <button type="button" id="logoutBtn" class="btn-primary">退出登录</button>
+        </div>
+    </main>
+
+    <footer>© 2026 Q 的网站</footer>
+
+    <!-- Supabase 官方 JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // ========== 在这里填入你自己的 Supabase 项目信息 ==========
+        const SUPABASE_URL = "https://qaqaeijbozwtlvxgckaz.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_rzCtAhhsB6--u_0U0lNE4w_BgDGUApS";
+        // ==========================================================
+
+        const isConfigured =
+            !SUPABASE_URL.includes("your-project") &&
+            !SUPABASE_ANON_KEY.includes("your-anon-key");
+
+        let sb = null;
+        if (isConfigured && window.supabase) {
+            sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        const authView = document.getElementById("authView");
+        const userView = document.getElementById("userView");
+        const authForm = document.getElementById("authForm");
+        const emailEl = document.getElementById("email");
+        const passwordEl = document.getElementById("password");
+        const msgEl = document.getElementById("msg");
+        const submitBtn = document.getElementById("submitBtn");
+        const otpBtn = document.getElementById("otpBtn");
+        const logoutBtn = document.getElementById("logoutBtn");
+        const userEmailEl = document.getElementById("userEmail");
+        const userIdEl = document.getElementById("userId");
+        const avatarEl = document.getElementById("avatar");
+
+        let mode = "login";
+
+        function setMsg(text, type) {
+            msgEl.textContent = text || "";
+            msgEl.className = "msg" + (type ? " " + type : "");
+        }
+
+        // 切换 登录 / 注册
+        document.querySelectorAll(".tab").forEach(tab => {
+            tab.addEventListener("click", () => {
+                mode = tab.dataset.mode;
+                document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t === tab));
+                submitBtn.textContent = mode === "login" ? "登录" : "注册";
+                setMsg("");
+            });
+        });
+
+        // 根据登录状态切换视图
+        function renderUser(user) {
+            if (user) {
+                authView.classList.add("hidden");
+                userView.classList.remove("hidden");
+                userEmailEl.textContent = user.email || "已登录用户";
+                userIdEl.textContent = "ID: " + user.id;
+                avatarEl.textContent = (user.email || "Q").charAt(0).toUpperCase();
+            } else {
+                authView.classList.remove("hidden");
+                userView.classList.add("hidden");
+            }
+        }
+
+        // 邮箱 + 密码 登录 / 注册
+        authForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            if (!sb) {
+                setMsg("请先在代码顶部填入 SUPABASE_URL 和 SUPABASE_ANON_KEY", "error");
+                return;
+            }
+
+            const email = emailEl.value.trim();
+            const password = passwordEl.value;
+            setMsg("");
+            submitBtn.disabled = true;
+
+            try {
+                if (mode === "login") {
+                    const { error } = await sb.auth.signInWithPassword({ email, password });
+                    if (error) throw error;
+                    setMsg("登录成功", "success");
+                } else {
+                    const { error } = await sb.auth.signUp({ email, password });
+                    if (error) throw error;
+                    setMsg("注册成功，请查收验证邮件后登录（若后台已开启邮箱验证）", "success");
+                }
+            } catch (err) {
+                setMsg(err.message || "操作失败，请稍后重试", "error");
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+
+        // 邮件验证码（免密码）登录
+        otpBtn.addEventListener("click", async () => {
+            if (!sb) {
+                setMsg("请先在代码顶部填入 SUPABASE_URL 和 SUPABASE_ANON_KEY", "error");
+                return;
+            }
+            const email = emailEl.value.trim();
+            if (!email) {
+                setMsg("请先填写邮箱", "error");
+                return;
+            }
+            setMsg("");
+            otpBtn.disabled = true;
+            try {
+                const { error } = await sb.auth.signInWithOtp({
+                    email,
+                    options: { emailRedirectTo: location.origin + location.pathname }
+                });
+                if (error) throw error;
+                setMsg("登录链接已发送，请查收邮件并点击链接完成登录", "success");
+            } catch (err) {
+                setMsg(err.message || "发送失败，请稍后重试", "error");
+            } finally {
+                otpBtn.disabled = false;
+            }
+        });
+
+        // 退出登录
+        logoutBtn.addEventListener("click", async () => {
+            if (!sb) return;
+            await sb.auth.signOut();
+            renderUser(null);
+        });
+
+        // 初始化登录状态
+        if (sb) {
+            sb.auth.getSession().then(({ data }) => renderUser(data.session?.user || null));
+            sb.auth.onAuthStateChange((_event, session) => renderUser(session?.user || null));
+        } else {
+            setMsg(
+                window.supabase
+                    ? "请先在代码顶部填入你自己的 Supabase 项目 URL 和 anon key"
+                    : "Supabase SDK 加载失败，请检查网络后刷新",
+                "error"
+            );
+        }
+    </script>
+</body>
+</html>
