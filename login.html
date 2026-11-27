@@ -61,6 +61,8 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            width: 100%;
+            max-width: 780px;
             font-size: 20px;
             font-weight: 600;
             letter-spacing: 6px;
@@ -345,25 +347,46 @@
             background: var(--accent-soft);
         }
 
-        /* ========== 私信 ========== */
-        .dm-entry {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            font-family: inherit;
-            font-size: 15px;
-            color: #ffffff;
-            background: var(--accent);
-            border: none;
-            border-radius: 10px;
+        /* ========== 私信图标按钮（头部右上角） ========== */
+        .dm-icon-btn {
+            position: relative;
+            margin-left: auto;
+            flex: 0 0 auto;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--accent-deep);
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0;
             transition: all 0.25s ease;
         }
-        .dm-entry:hover { background: var(--accent-deep); transform: translateY(-1px); }
+        .dm-icon-btn:hover {
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+        .dm-icon-btn svg { width: 20px; height: 20px; display: block; }
         .dm-badge {
-            display: inline-block; min-width: 18px; padding: 1px 6px; margin-left: 6px;
-            font-size: 11px; line-height: 18px; text-align: center;
-            color: #ffffff; background: #e05a4f; border-radius: 999px;
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            font-size: 10px;
+            line-height: 16px;
+            text-align: center;
+            color: #ffffff;
+            background: #e05a4f;
+            border: 2px solid var(--bg);
+            border-radius: 999px;
+            letter-spacing: 0;
         }
 
         .dm-panel {
@@ -462,14 +485,23 @@
 </head>
 <body>
     <!-- 站点头部（可自行修改站点名） -->
-    <header>Q 的网站</header>
+    <header>
+        <span>Q 的网站</span>
+        <button type="button" id="dmEntry" class="dm-icon-btn hidden" title="私信" aria-label="私信">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                <path d="m3 7 9 6 9-6"></path>
+            </svg>
+            <span id="dmBadge" class="dm-badge hidden">0</span>
+        </button>
+    </header>
 
     <main>
         <!-- 返回首页 -->
         <a href="/" class="back-btn">← 返回首页</a>
 
-        <h1 class="doc-title">登录</h1>
-        <p class="doc-subtitle">用邮箱登录，管理你的专属内容</p>
+        <h1 class="doc-title" id="docTitle">登录</h1>
+        <p class="doc-subtitle" id="docSubtitle">用邮箱登录，管理你的专属内容</p>
 
         <div class="divider"></div>
 
@@ -506,7 +538,6 @@
 
             <div class="profile-form">
                 <a href="profile.html" class="btn-secondary">修改资料</a>
-                <button type="button" id="dmEntry" class="dm-entry">私信<span id="dmBadge" class="dm-badge hidden">0</span></button>
                 <button type="button" id="logoutBtn" class="btn-secondary">退出登录</button>
 
                 <!-- 私信面板 -->
@@ -564,6 +595,8 @@
         const userEmailEl = document.getElementById("userEmail");
         const userIdEl = document.getElementById("userId");
         const avatarEl = document.getElementById("avatar");
+        const docTitleEl = document.getElementById("docTitle");
+        const docSubtitleEl = document.getElementById("docSubtitle");
 
         let mode = "login";
         let currentUser = null;
@@ -730,18 +763,24 @@
         });
         dmInput.addEventListener("keydown", e => { if (e.key === "Enter") dmSend.click(); });
 
-        // 拉取当前用户的资料用于头像显示（编辑已移到 profile.html）
+        // 拉取当前用户的资料：头像 + 副标题个人信息（编辑已移到 profile.html）
         async function loadProfile(user) {
             if (!sb || !user) return;
             const { data } = await sb
                 .from("profiles")
-                .select("nickname, avatar_url")
+                .select("nickname, avatar_url, bio")
                 .eq("id", user.id)
                 .maybeSingle();
             if (data) {
                 updateAvatar(data.avatar_url, data.nickname, user.email);
+                const parts = [];
+                if (data.nickname) parts.push(data.nickname);
+                if (user.email) parts.push(user.email);
+                if (data.bio) parts.push(data.bio);
+                docSubtitleEl.textContent = parts.join(" · ") || "已登录";
             } else {
                 avatarEl.textContent = (user.email || "Q").charAt(0).toUpperCase();
+                docSubtitleEl.textContent = user.email || "已登录";
             }
         }
 
@@ -780,8 +819,11 @@
             if (user) {
                 authView.classList.add("hidden");
                 userView.classList.remove("hidden");
+                docTitleEl.textContent = "个人中心";
+                dmEntry.classList.remove("hidden");
                 userEmailEl.textContent = user.email || "已登录用户";
                 userIdEl.textContent = "ID: " + user.id;
+                docSubtitleEl.textContent = user.email || "已登录";
                 loadProfile(user);
                 dmPanel.classList.add("hidden");
                 dmUsersLoaded = false;
@@ -790,6 +832,10 @@
             } else {
                 authView.classList.remove("hidden");
                 userView.classList.add("hidden");
+                docTitleEl.textContent = "登录";
+                docSubtitleEl.textContent = "用邮箱登录，管理你的专属内容";
+                dmEntry.classList.add("hidden");
+                dmBadge.classList.add("hidden");
                 if (dmChannel) { if (sb) sb.removeChannel(dmChannel); dmChannel = null; }
                 dmPeer = null;
             }
